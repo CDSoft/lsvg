@@ -21,8 +21,8 @@ http://cdelord.fr/lsvg
 -- The global variable `img` is an SVG object used by lsvg to produce the images
 img {
     -- img can be called to add more attributes
-    width = 640,
-    height = 480,
+    width = 320,
+    height = 240,
 }
 
 local w = img.attrs.width
