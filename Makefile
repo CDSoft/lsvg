@@ -59,4 +59,4 @@ $(BUILD)/demo.ok: demo.svg $(BUILD)/demo.svg
 
 $(BUILD)/demo.svg: $(LSVG) demo.lua
 	@echo '${BLACK}${BG_GREEN}[TEST]${NORMAL} ${CYAN}running $^${NORMAL}'
-	@$(LSVG) demo.lua $@
+	@$(LSVG) demo.lua $@ -- lsvg demo

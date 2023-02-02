@@ -21,7 +21,7 @@ http://cdelord.fr/lsvg
 --]]
 
 local usage = [[
-lsvg <Lua scripts> <output files>
+lsvg <Lua scripts> <output files> [-- <other args>]
 
 <Lua scripts>
     Lua script using the svg module
@@ -30,6 +30,12 @@ lsvg <Lua scripts> <output files>
 <output files>
     Output file names where the image is saved
     (SVG or PNG)
+
+<other args>
+    Arguments given to the input Lua scripts
+    through the arg global variable
+
+For further information, please visit http://cdelord.fr/lsvg
 ]]
 
 local F = require "fun"
@@ -39,25 +45,37 @@ local svg = require "svg".open()
 -- The Lua script shall use the global variable `img` to describe the SVG image
 _ENV.img = svg()
 
-local n = 0
-F(arg):map(function(a)
-    local _, ext = fs.splitext(a)
+local inputs = F{}
+local outputs = F{}
+
+for i = 1, #arg do
+    local _, ext = fs.splitext(arg[i])
     if ext == ".lua" then
-        n = n + 1
-        assert(loadfile(a))()
+        inputs[#inputs+1] = arg[i]
     elseif ext == ".svg" or ext == ".png" then
-        if not _ENV.img:save(a) then
-            io.stderr:write(arg[0], ": can not save ", a, "\n")
-            os.exit(1)
-        end
+        outputs[#outputs+1] = arg[i]
+    elseif arg[i] == "--" then
+        arg = F.drop(i, arg)
+        break
     else
         io.stderr:write("Invalid argument: ", a, "\n")
         io.stderr:write(usage)
         os.exit(1)
     end
+end
+
+if #inputs == 0 then
+    print(usage)
+    os.exit(0)
+end
+
+inputs:map(function(name)
+    assert(loadfile(name))()
 end)
 
--- Nothing done, prints some help
-if n == 0 then
-    print(usage)
-end
+outputs:map(function(name)
+    if not _ENV.img:save(name) then
+        io.stderr:write(arg[0], ": can not save ", name, "\n")
+        os.exit(1)
+    end
+end)

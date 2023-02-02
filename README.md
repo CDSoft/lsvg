@@ -31,7 +31,7 @@ If LuaX is not installed yet, the first compilation may take a while...
 ```
 $ lsvg
 
-lsvg <Lua scripts> <output files>
+lsvg <Lua scripts> <output files> [-- <other args>]
 
 <Lua scripts>
     Lua script using the svg module
@@ -40,16 +40,20 @@ lsvg <Lua scripts> <output files>
 <output files>
     Output file names where the image is saved
     (SVG or PNG)
+
+<other args>
+    Arguments given the to input Lua scripts
+    through the arg global variable
 ```
 
 ### Example
 
 ```
-$ lsvg demo.lua demo.svg
+$ lsvg demo.lua demo.svg -- lsvg demo
 ```
 
-This command execute [`demo.lua`](demo.lua) and produces
-[`demo.svg`](demo.svg):
+This command stores `{"lsvg", "demo"}` in `arg`, executes
+[`demo.lua`](demo.lua) and produces [`demo.svg`](demo.svg):
 
 > ![demo.svg](demo.svg)
 

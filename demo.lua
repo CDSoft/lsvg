@@ -44,8 +44,9 @@ local title = G {
         rx=w/16,
         fill="grey", fill_opacity=0.4,
         stroke="cyan", stroke_width=w/32, stroke_opacity=0.4},
-    Text "lsvg" {x = w/2, y = h/2-w/8/2},
-    Text "demo" {x = w/2, y = h/2+w/8/2},
+    -- Text given on the command line
+    Text(arg[1]) {x = w/2, y = h/2-w/8/2},
+    Text(arg[2]) {x = w/2, y = h/2+w/8/2},
 }
 
 -- the final image
