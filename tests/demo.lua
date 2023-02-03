@@ -43,7 +43,8 @@ local title = G {
         x=w/6, y=h/6, width=4*w/6, height=4*h/6,
         rx=w/16,
         fill="grey", fill_opacity=0.4,
-        stroke="cyan", stroke_width=w/32, stroke_opacity=0.4},
+        stroke="cyan", stroke_width=w/32, stroke_opacity=0.4
+    },
     -- Text given on the command line
     Text(arg[1]) {x = w/2, y = h/2-w/8/2},
     Text(arg[2]) {x = w/2, y = h/2+w/8/2},

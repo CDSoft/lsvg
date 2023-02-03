@@ -51,12 +51,17 @@ $(LSVG): lsvg.lua svg.lua | $(LUAX)
 
 ## Test lsvg
 test: $(BUILD)/demo.ok
+test:
 	@echo '${BLACK}${BG_GREEN}[TEST]${NORMAL} ${GREEN}Test passed${NORMAL}'
 
-$(BUILD)/demo.ok: demo.svg $(BUILD)/demo.svg
+$(BUILD)/%.ok: tests/%.svg $(BUILD)/%.svg
 	@diff -b --color $^
 	@touch $@
 
-$(BUILD)/demo.svg: $(LSVG) demo.lua
+$(BUILD)/%.svg: $(LSVG) tests/%.lua
 	@echo '${BLACK}${BG_GREEN}[TEST]${NORMAL} ${CYAN}running $^${NORMAL}'
-	@$(LSVG) demo.lua $@ -- lsvg demo
+	@$^ $@
+
+$(BUILD)/demo.svg: $(LSVG) tests/demo.lua
+	@echo '${BLACK}${BG_GREEN}[TEST]${NORMAL} ${CYAN}running $^${NORMAL}'
+	@$(LSVG) tests/demo.lua $@ -- lsvg demo
