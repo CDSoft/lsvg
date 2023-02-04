@@ -72,11 +72,12 @@ function node_mt:__tostring()
 end
 
 function node_mt.__index:save(filename)
-    if filename:match "%.svg$" then
+    local base, ext = fs.splitext(filename)
+    if ext == ".svg" then
         return fs.write(filename, tostring(self))
-    elseif filename:match "%.png$" then
-        fs.with_tmpdir(function(tmp)
-            local tmpname = fs.join(tmp, fs.splitext(fs.basename(filename))..".svg")
+    elseif ext == ".png" or ext == ".pdf" then
+        return fs.with_tmpdir(function(tmp)
+            local tmpname = fs.join(tmp, fs.basename(base)..".svg")
             local ok, err = fs.write(tmpname, tostring(self))
             if not ok then return nil, err end
             return sh.run("convert", tmpname, filename)

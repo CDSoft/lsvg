@@ -39,7 +39,7 @@ lsvg <Lua scripts> <output files> [-- <other args>]
 
 <output files>
     Output file names where the image is saved
-    (SVG or PNG)
+    (SVG, PNG or PDF)
 
 <other args>
     Arguments given the to input Lua scripts

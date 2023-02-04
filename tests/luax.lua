@@ -31,8 +31,8 @@ local r_moon = r_planet / 4 + 20
 
 img:Circle {
     cx = 512, cy = 512, r = r_orbit,
-    fill = "transparent",
-    stroke = "grey", stroke_width = orbit_width, stroke_dasharray = 50
+    fill = "white", opacity = 1.0,
+    stroke = "grey", stroke_width = orbit_width, stroke_dasharray = 50,
 }
 img:Circle { cx = 512, cy = 512, r = r_planet, fill = "blue" }
 local x0 = 512 + r_planet/2^0.5

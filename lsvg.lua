@@ -52,7 +52,7 @@ for i = 1, #arg do
     local _, ext = fs.splitext(arg[i])
     if ext == ".lua" then
         inputs[#inputs+1] = arg[i]
-    elseif ext == ".svg" or ext == ".png" then
+    elseif ext == ".svg" or ext == ".png" or ext == ".pdf" then
         outputs[#outputs+1] = arg[i]
     elseif arg[i] == "--" then
         arg = F.drop(i, arg)
