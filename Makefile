@@ -18,7 +18,7 @@
 
 BUILD = .build
 
-LSVG = $(BUILD)/lsvg
+LSVG_BIN = $(BUILD)/lsvg
 
 PREFIX := $(firstword $(wildcard $(PREFIX) $(HOME)/.local $(HOME)))
 
@@ -27,7 +27,7 @@ all: compile
 all: test
 
 ## Install lsvg to $PREFIX/bin, ~/.local/bin or ~/bin
-install: $(LSVG)
+install: $(LSVG_BIN)
 	@test -n "$(PREFIX)" || (echo "No installation path found" && false)
 	@mkdir -p $(PREFIX)/bin
 	@install -v $< $(PREFIX)/bin
@@ -42,9 +42,9 @@ welcome:
 	@echo '${CYAN}lsvg${NORMAL}: Lua scriptable SVG generator'
 
 ## Compile lsvg
-compile: $(LSVG)
+compile: $(LSVG_BIN)
 
-$(LSVG): lsvg.lua svg.lua | $(LUAX)
+$(LSVG_BIN): lsvg.lua svg.lua | $(LUAX)
 	@echo '${BLACK}${BG_GREEN}[LUAX]${NORMAL} ${CYAN}compiling $@${NORMAL}'
 	@mkdir -p $(dir $@)
 	@$(LUAX) -o $@ $^
@@ -59,10 +59,10 @@ $(BUILD)/%.ok: tests/%.svg $(BUILD)/%.svg
 	@diff -b --color $^
 	@touch $@
 
-$(BUILD)/demo.svg: $(LSVG) tests/demo.lua
+$(BUILD)/demo.svg: $(LSVG_BIN) tests/demo.lua
 	@echo '${BLACK}${BG_GREEN}[TEST]${NORMAL} ${CYAN}running $^${NORMAL}'
 	@$^ $@ -- lsvg demo
 
-$(BUILD)/%.svg: $(LSVG) tests/%.lua
+$(BUILD)/%.svg: $(LSVG_BIN) tests/%.lua
 	@echo '${BLACK}${BG_GREEN}[TEST]${NORMAL} ${CYAN}running $^${NORMAL}'
 	@$^ $@
