@@ -21,27 +21,38 @@ http://cdelord.fr/lsvg
 img {
     width = 1024,
     height = 1024,
-    font_size=1024/4, text_anchor="middle",
+    font_size=1024//4, text_anchor="middle",
 }
+
+local w = img.attrs.width
+local h = img.attrs.height
+local fh = img.attrs.font_size
 
 local orbit_width = 20
-local r_orbit = 512-orbit_width
-local r_planet = 384-10
-local r_moon = r_planet / 4 + 20
+local r_orbit = w//2-orbit_width
+local r_planet = 384-20
+local r_moon = r_planet // 4 + 22
 
-img:Circle {
-    cx = 512, cy = 512, r = r_orbit,
-    fill = "white", opacity = 1.0,
-    stroke = "grey", stroke_width = orbit_width, stroke_dasharray = 50,
+local g = img:G {
+    transform = ("translate(%d, %d)"):format(w//2, h//2),
 }
-img:Circle { cx = 512, cy = 512, r = r_planet, fill = "blue" }
-local x0 = 512 + r_planet/2^0.5
-local y0 = 512 - r_planet/2^0.5
-local x1 = 512 + (r_orbit+44)/2^0.5
-local y1 = 512 - (r_orbit+44)/2^0.5
+
+g:Circle {
+    r = r_orbit,
+    fill = "white", opacity = 1.0,
+    stroke = "grey", stroke_width = orbit_width, stroke_dasharray = 60,
+    transform = "rotate(-3)",
+}
+g:Circle { r = r_planet, fill = "blue" }
+local x0 = math.floor( r_planet/2^0.5)
+local y0 = math.floor(-r_planet/2^0.5)
+local x1 = math.floor( (r_orbit+44)/2^0.5)
+local y1 = math.floor(-(r_orbit+44)/2^0.5)
 local x2 = x0 - (x1-x0)
 local y2 = y0 - (y1-y0)
-img:Circle { cx = x1, cy = y1, r = r_moon, fill = "blue" }
-img:Circle { cx = x2, cy = y2, r = r_moon, fill = "white" }
+g:Circle { cx = x1, cy = y1, r = r_moon, fill = "blue" }
+g:Circle { cx = x2, cy = y2, r = r_moon, fill = "white" }
 
-img:Text "LuaX" { x = 512, y = 512+192, fill = "white" }
+g:Text "Lua" { y = fh*3//4, fill = "white" }
+g:Text "X" { x = x1, y = y1+fh*1//8, fill = "white", font_size = fh//2 }
+g:Text "X" { x = x2, y = y2+fh*1//8, fill = "blue", font_size = fh//2 }
