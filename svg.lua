@@ -18,7 +18,7 @@ For further information about lsvg you can visit
 http://cdelord.fr/lsvg
 --]]
 
-local F = require "fun"
+local F = require "F"
 local sh = require "sh"
 local fs = require "fs"
 

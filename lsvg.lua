@@ -38,7 +38,7 @@ lsvg <Lua scripts> <output files> [-- <other args>]
 For further information, please visit http://cdelord.fr/lsvg
 ]]
 
-local F = require "fun"
+local F = require "F"
 local fs = require "fs"
 local svg = require "svg".open()
 
