@@ -21,7 +21,9 @@ http://cdelord.fr/lsvg
 img {
     width = 1024,
     height = 1024,
-    font_size=1024//4, text_anchor="middle",
+    font_size = 312,
+    text_anchor = "middle",
+    font_family = "Liberation Sans",
 }
 
 local w = img.attrs.width

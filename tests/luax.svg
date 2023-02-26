@@ -1,11 +1,11 @@
-<svg font-size="256" height="1024" text-anchor="middle" version="1.1" width="1024" xmlns="http://www.w3.org/2000/svg">
+<svg font-family="Liberation Sans" font-size="312" height="1024" text-anchor="middle" version="1.1" width="1024" xmlns="http://www.w3.org/2000/svg">
 <g transform="translate(512, 512)">
 <circle fill="white" opacity="1.0" r="492" stroke="grey" stroke-dasharray="60" stroke-width="20" transform="rotate(-3)"/>
 <circle fill="blue" r="364"/>
 <circle cx="379" cy="-380" fill="blue" r="113"/>
 <circle cx="135" cy="-136" fill="white" r="113"/>
-<text fill="white" y="192">Lua</text>
-<text fill="white" font-size="128" x="379" y="-348">X</text>
-<text fill="blue" font-size="128" x="135" y="-104">X</text>
+<text fill="white" y="234">Lua</text>
+<text fill="white" font-size="156" x="379" y="-341">X</text>
+<text fill="blue" font-size="156" x="135" y="-97">X</text>
 </g>
 </svg>
