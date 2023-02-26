@@ -88,6 +88,123 @@ function node_mt.__index:save(filename)
 end
 
 ---------------------------------------------------------------------
+-- Frames
+---------------------------------------------------------------------
+
+function Frame(t)
+    local xmin, ymin, xmax, ymax = t.xmin, t.ymin, t.xmax, t.ymax
+    local Xmin, Ymin, Xmax, Ymax = t.Xmin, t.Ymin, t.Xmax, t.Ymax
+
+    local function tx(x) return (x-xmin)*(Xmax-Xmin)/(xmax-xmin) + Xmin end
+    local function ty(y) return (y-ymax)*(Ymax-Ymin)/(ymin-ymax) + Ymin end
+    local function trx(x) return tx(x) - tx(0) end
+    local function try(y) return ty(0) - ty(y) end
+    local id = F.id
+
+    local function txy(s)
+        return s:words()
+            :map(function(xy)
+                local x, y = xy:split(","):map(tonumber):unpack()
+                return F{tx(x), ty(y)}:str ","
+            end)
+            :unwords()
+    end
+
+    local m = {
+        x = tx, x1 = tx, x2 = tx,
+        y = ty, y1 = ty, y2 = ty,
+        width = tx, height = ty,
+        cx = tx, cy = ty, r = trx, rx = trx, ry = try,
+        points = txy,
+    }
+
+    local function transform(node)
+        if type(node) ~= 'table' then return node end
+        if node.name == "linearGradient" then return end
+        if node.name == "radialGradient" then return end
+        local new = Node(node.name)
+        new.attrs = node.attrs:mapk(function(k, v)
+            return (m[k] or id)(v)
+        end)
+        new.contents = node.contents:map(transform)
+        return new
+    end
+
+    return transform
+end
+
+---------------------------------------------------------------------
+-- Points and vectors
+---------------------------------------------------------------------
+
+local sin = math.sin
+local cos = math.cos
+
+local P_mt = {__index={}}
+
+local function is_point(M)
+    return type(M) == "table" and getmetatable(M) == P_mt
+end
+
+function Point(x, y) return setmetatable({x, y}, P_mt) end
+
+function Vector(x, y) return Point(x, y) end
+
+function P_mt.__index:unpack() return F.unpack(self) end
+
+function P_mt.__index:x() return self[1] end
+
+function P_mt.__index:y() return self[2] end
+
+function P_mt.__index:xy() return {x=self[1], y=self[2]} end
+function P_mt.__index:xy1() return {x1=self[1], y1=self[2]} end
+function P_mt.__index:xy2() return {x2=self[1], y2=self[2]} end
+function P_mt.__index:cxy() return {cx=self[1], cy=self[2]} end
+
+function P_mt.__add(M1, M2)
+    if not is_point(M1) or not is_point(M2) then
+        error("Can not add "..F.show(a).." and "..F.show(b))
+    end
+    return Point(F.zip_with(F.op.add, {M1, M2}):unpack())
+end
+
+function P_mt.__sub(M1, M2)
+    if not is_point(M1) or not is_point(M2) then
+        error("Can not substract "..F.show(a).." and "..F.show(b))
+    end
+    return Point(F.zip_with(F.op.sub, {M1, M2}):unpack())
+end
+
+function P_mt.__mul(M, k)
+    if is_point(M) and type(k) == "number" then
+        M, k = M, k
+    elseif is_point(k) and type(M) == "number" then
+        M, k = k, M
+    else
+        error("Can not multiply "..F.show(M).." by "..F.show(k))
+    end
+    return Point(F.map(F.curry(F.op.mul)(k), M):unpack())
+end
+
+function P_mt.__div(M, k)
+    if not is_point(M) or not type(k) == "number" then
+        error("Can not multiply "..F.show(a).." by "..F.show(b))
+    end
+    return Point(F.map(F.curry(F.flip(F.op.div))(k), M):unpack())
+end
+
+function P_mt.__unm(M)
+    return M * (-1)
+end
+
+function P_mt.__index.rot(M, C, theta)
+    local x, y = (M-C):unpack()
+    local xr = x*cos(theta) - y*sin(theta)
+    local yr = x*sin(theta) + y*cos(theta)
+    return Point(xr, yr) + C
+end
+
+---------------------------------------------------------------------
 -- SVG document
 ---------------------------------------------------------------------
 
@@ -105,7 +222,7 @@ end
 local svg = {}
 local svg_mt = {}
 
-local nodes = "g text rect circle ellipse line polyline path"
+local nodes = "g text rect circle ellipse line polygon polyline path"
 
 nodes:words():map(function(name)
     svg[name:cap()] = function(t) return Node(name)(t) end
