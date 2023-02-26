@@ -112,6 +112,10 @@ PANDOC_VERSION ?= 3.1
 # PANDOC_CLI_VERSION is the version number of pandoc-cli
 PANDOC_CLI_VERSION ?= 0.1
 
+# PANDOC_DYNAMIC_LINK is "no" to download a statically linked executable
+# or "yes" to compile a dynamically linked executable with cabal
+PANDOC_DYNAMIC_LINK ?= yes
+
 # PANDOC_LATEX_TEMPLATE_VERSION is a tag or branch name in the
 # pandoc-latex-template repository
 PANDOC_LATEX_TEMPLATE_VERSION = master
@@ -369,11 +373,39 @@ export PATH := $(dir $(PANDOC)):$(PATH)
 $(dir $(PANDOC)) $(MAKEX_CACHE)/pandoc:
 	@mkdir -p $@
 
+ifeq ($(PANDOC_DYNAMIC_LINK),no)
+
+PANDOC_URL = https://github.com/jgm/pandoc/releases/download/$(PANDOC_VERSION)/$(PANDOC_ARCHIVE)
+
+ifeq ($(MAKEX_OS)-$(MAKEX_ARCH),Linux-x86_64)
+PANDOC_ARCHIVE = pandoc-$(PANDOC_VERSION)-linux-amd64.tar.gz
+endif
+ifeq ($(MAKEX_OS)-$(MAKEX_ARCH),Linux-aarch64)
+PANDOC_ARCHIVE = pandoc-$(PANDOC_VERSION)-linux-arm64.tar.gz
+endif
+
+check_pandoc_architecture:
+	@test -n "$(PANDOC_ARCHIVE)" \
+	|| (echo "$(BG_RED)ERROR$(NORMAL)$(RED): $(MAKEX_OS)-$(MAKEX_ARCH): Unknown archivecture, can not install pandoc$(NORMAL)"; false)
+
+$(PANDOC): check_pandoc_architecture | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC)) $(PANDOC_LATEX_TEMPLATE) $(PANDOC_LETTER) $(PANAM_CSS)
+	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc$(NORMAL)"
+	@test -f $(@) \
+	|| \
+	( wget -c $(PANDOC_URL) -O $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
+	    && tar -C $(MAKEX_CACHE)/pandoc -xzf $(MAKEX_CACHE)/pandoc/$(notdir $(PANDOC_URL)) \
+	    && cp -P $(MAKEX_CACHE)/pandoc/pandoc-$(PANDOC_VERSION)/bin/* $(dir $@) \
+	)
+
+else
+
 $(PANDOC): | $(MAKEX_CACHE) $(MAKEX_CACHE)/pandoc $(dir $(PANDOC)) $(PANDOC_LATEX_TEMPLATE) $(PANDOC_LETTER) $(PANAM_CSS) $(CABAL)
 	@echo "$(MAKEX_COLOR)[MAKEX]$(NORMAL) $(TEXT_COLOR)install Pandoc$(NORMAL)"
 	@test -f $(@) \
 	|| \
 	$(CABAL) install pandoc-$(PANDOC_VERSION) pandoc-cli-$(PANDOC_CLI_VERSION) --install-method=copy --installdir=$(dir $@)
+
+endif
 
 makex-install: makex-install-pandoc
 makex-install-pandoc: $(PANDOC)
