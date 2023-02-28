@@ -56,13 +56,43 @@ function node_mt:__call(x)
     return self
 end
 
+local function quote(s)
+    return ("%q"):format(s)
+end
+
+local function fmt_num_raw(x)
+    local i = math.floor(x)
+    if i == x then return ('%d'):format(i) end
+    return ('%.2f'):format(x):gsub("%.0+$", "")
+end
+
+local function fmt_num(x)
+    return quote(fmt_num_raw(x))
+end
+
+local function fmt_points(ps)
+    return quote(ps:words():map(function(p) return p:split ",":map(fmt_num_raw):str "," end):unwords())
+end
+
+local fmt = {
+    font_size = fmt_num,
+    height = fmt_num, width = fmt_num,
+    x = fmt_num, y = fmt_num,
+    x1 = fmt_num, y1 = fmt_num,
+    x2 = fmt_num, y2 = fmt_num,
+    cx = fmt_num, cy = fmt_num, r = fmt_num, rx = fmt_num, ry = fmt_num,
+    stroke_width = fmt_num,
+    points = fmt_points,
+}
+
 function node_mt:__tostring()
     local nl = self.contents:filter(function(t) return type(t) == "table" end):null() and {} or "\n"
     return F.flatten {
         "<", self.name,
         self.attrs:items():map(function(kv)
             local k, v = F.unpack(kv)
-            return { " ", k:gsub("_", "-"), "=", ('"%s"'):format(v) }
+            local f = fmt[k] or (function(x) return ('"%s"'):format(x) end)
+            return { " ", k:gsub("_", "-"), "=", f(v) }
         end),
         #self.contents == 0
             and { "/>" }

@@ -162,17 +162,17 @@ do
     local k2 = 0.75
     local theta1 = math.rad(-35)
     local theta2 = math.rad(19)
-    local e0 = 2
-    local ethr = 0.6
+    local e0 = 20
+    local ethr = 6
     local ke = 0.75
-    local emin = 0.1
+    local emin = 1
 
     local prng = crypt.prng(42)
     local function grow(M0, M1, e)
         if e < emin then return 0 end
 
         local color = e > ethr and "brown" or "green"
-        tree { Line (M0:xy1())(M1:xy2()) { stroke=color, stroke_width=10*e } }
+        tree { Line (M0:xy1())(M1:xy2()) { stroke=color, stroke_width=2*e } }
 
         local R1 = M1 + k1*(M1-M0)
         local R2 = R1:rot(M1, theta1+prng:float(-0.1, 0.1))
