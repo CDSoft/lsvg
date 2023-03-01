@@ -26,6 +26,15 @@ local fs = require "fs"
 -- Generic SVG node
 ---------------------------------------------------------------------
 
+-- SVG tree representation in Lua
+-- ------------------------------
+-- An SVG node (as well as an entire SVG image) is a table containing
+-- attributes and child nodes.
+-- The `__call` metamethod can add new attributes or children,
+-- or replace the existing ones.
+-- The structure of the node tree defined in Lua is exactly the
+-- structure of the final SVG file.
+
 local node_mt = {__index = {}}
 
 local function Node(name)
@@ -56,18 +65,29 @@ function node_mt:__call(x)
     return self
 end
 
+-- SVG generation
+-- --------------
+-- The Lua tree is converted to a string representing the final SVG document.
+-- To reduce the size of the SVG image, the precision of floating point numbers
+-- is limited to 2 digits.
+-- The generation is implemented by the `__tostring` metamethod.
+
+-- add quotes around a string
 local function quote(s)
     return ("%q"):format(s)
 end
 
+-- format a number with a 2-digit precision
 local function fmt_num_raw(x)
     return ('%.2f'):format(x):gsub("%.0+$", "")
 end
 
+-- format a number with quotes
 local function fmt_num(x)
     return quote(fmt_num_raw(x))
 end
 
+-- format a list of points ("x,y x,y ...")
 local function fmt_points(ps)
     if type(ps) == "string" then
         ps = ps:words():map(function(p) return p:split ",":map(tonumber) end)
@@ -75,10 +95,12 @@ local function fmt_points(ps)
     return quote(ps:map(function(p) return F.map(fmt_num_raw, p):str "," end):unwords())
 end
 
+-- default format
 local function fmt_default(x)
     return ('"%s"'):format(x)
 end
 
+-- formatting function according to the field name
 local fmt = {
     font_size = fmt_num,
     height = fmt_num, width = fmt_num,
@@ -90,6 +112,17 @@ local fmt = {
     points = fmt_points,
 }
 
+-- rewrite some attributes before generating SVG attributes
+-- To simplify the description of positions with Point, some attributes
+-- are rewritten when generating the SVG file.
+--
+--    xy={x, y} -> x=x, y=y
+--    xy1={x, y} -> x1=x, y1=y
+--    xy2={x, y} -> x2=x, y2=y
+--    cxy={x, y} -> cx=x, cy=y
+--
+--    points={{x1, y1}, {x2, y2}, ...} -> points="x1,y1 x2,y2"
+
 local function rewrite(attrs)
     attrs = F.clone(attrs)
     if attrs.xy  then attrs.x,  attrs.y  = F.unpack(attrs.xy);  attrs.xy  = nil end
@@ -99,6 +132,7 @@ local function rewrite(attrs)
     return attrs
 end
 
+-- __tostring produces an SVG description of a node and its children.
 function node_mt:__tostring()
     local nl = self.contents:filter(function(t) return type(t) == "table" end):null() and {} or "\n"
     local attrs = rewrite(self.attrs)
@@ -116,6 +150,11 @@ function node_mt:__tostring()
     } : str()
 end
 
+-- save writes the image to a file.
+-- The image format is infered from its name:
+-- - file.svg : saved as an SVG text file
+-- - file.png or file.pdf : saved as a PNG or PDF file
+--   (SVG converted to PNG or PDF with ImageMagick)
 function node_mt.__index:save(filename)
     local base, ext = fs.splitext(filename)
     if ext == ".svg" then
@@ -136,6 +175,14 @@ end
 -- Frames
 ---------------------------------------------------------------------
 
+-- Frame returns a function that changes the frame of items in a SVG node.
+-- xmin, xmax, ymin, ymax describe the coordinates of the items in the SVG node.
+-- Xmin, Xmax, Ymin, Ymax describe the coordinates of the items in the final SVG image.
+-- Note: the y-axis is upward in the first frame. The Y-axis is downward in the SVG image.
+-- Frame recomputes the coordinates of items, not their intrinsic characteristics.
+-- I.e. fields like x, y, x1, y1, x2, y2, cx, cy, r, rx, ry, width, height, points
+-- are recomputed. Other fields (e.g. stroke_width, font_size) are keep to avoid
+-- changing the aspect of the image.
 function Frame(t)
     local xmin, ymin, xmax, ymax = t.xmin, t.ymin, t.xmax, t.ymax
     local Xmin, Ymin, Xmax, Ymax = t.Xmin, t.Ymin, t.Xmax, t.Ymax
@@ -170,8 +217,8 @@ function Frame(t)
 
     local function transform(node)
         if type(node) ~= 'table' then return node end
-        if node.name == "linearGradient" then return end
-        if node.name == "radialGradient" then return end
+        if node.name == "linearGradient" then return node end
+        if node.name == "radialGradient" then return node end
         local new = Node(node.name)
         new.attrs = node.attrs:mapk(function(k, v)
             return (m[k] or id)(v)
@@ -186,6 +233,19 @@ end
 ---------------------------------------------------------------------
 -- Points and vectors
 ---------------------------------------------------------------------
+
+-- Point (and Vector which is an alias for Point) is a 2-number list
+-- representing a 2D point that can be used to define the position of
+-- SVG nodes.
+--
+-- Point(x, y) returns a point defined by its coordinates
+-- P:unpack() returns x, y
+-- P+V translates P by V
+-- P-V translates P by -V
+-- k*P or P*k scales P with a factor k
+-- P/k scales P with a factor 1/k
+-- -V negates V
+-- P:rot(C, theta) rotates P around C by the angle theta
 
 local sin = math.sin
 local cos = math.cos

@@ -6,7 +6,7 @@ It is based on [LuaX](https://github.com/CDSoft/luax) and uses a pure Lua
 library to generate SVG images. It optionally requires
 [ImageMagick](https://imagemagick.org/) to make PNG images.
 
-`lsvg` is inspired by [svg-lua](https://github.com/Jericho1060/svg-lua).
+`lsvg` was initially inspired by [svg-lua](https://github.com/Jericho1060/svg-lua).
 
 ## Installation
 
