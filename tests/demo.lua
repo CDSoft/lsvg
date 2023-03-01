@@ -203,12 +203,12 @@ do
         local M1 = Point(prng:float(-20, 20), prng:float(0.5, 2))
         local M0 = Point(M1:x(), 0)
         local t = math.sin(2*pi*M1:x()/15)
-        local theta = -math.rad((t+1)*(theta2-theta1)/2+theta1)
+        local theta = -math.rad((t+1)*(theta2-theta1)/2+theta1) + prng:float(-0.2, 0.2)
         local M2 = M1:rot(M0, theta)
         tree { Line { xy1=M0, xy2=M2, stroke="green" } }
-        if prng:float() < 0.1 then
+        if prng:float() < 0.15 then
             -- this is a flower
-            tree { Circle { cxy=M2, r=0.2 } { stroke="white", fill="pink", stroke_width=2 } }
+            tree { Circle { cxy=M2, r=0.2 } { stroke="white", fill="purple", stroke_width=2 } }
             flowers = flowers + 1
         else
             blades = blades + 1

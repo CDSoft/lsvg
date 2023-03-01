@@ -79,7 +79,7 @@ end
 
 -- format a number with a 2-digit precision
 local function fmt_num_raw(x)
-    return ('%.2f'):format(x):gsub("%.0+$", "")
+    return ('%.2f'):format(x):gsub("0+$", ""):gsub("%.$", "")
 end
 
 -- format a number with quotes
@@ -246,6 +246,9 @@ end
 -- P/k scales P with a factor 1/k
 -- -V negates V
 -- P:rot(C, theta) rotates P around C by the angle theta
+-- V:norm() is the norm of the vector
+-- V:direction() is the angle of the vector (atan2(y, x))
+-- V:unit() is a unit vector with the same direction than V
 
 local sin = math.sin
 local cos = math.cos
@@ -270,6 +273,11 @@ function P_mt.__index:xy() return {x=self[1], y=self[2]} end
 function P_mt.__index:xy1() return {x1=self[1], y1=self[2]} end
 function P_mt.__index:xy2() return {x2=self[1], y2=self[2]} end
 function P_mt.__index:cxy() return {cx=self[1], cy=self[2]} end
+
+function P_mt.__index:norm() return (self[1]^2 + self[2]^2)^0.5 end
+function P_mt.__index:direction() return math.atan(self[2], self[1]) end
+
+function P_mt.__index:unit() return self/self:norm() end
 
 function P_mt.__add(M1, M2)
     if not is_point(M1) or not is_point(M2) then
@@ -307,7 +315,10 @@ function P_mt.__unm(M)
     return M * (-1)
 end
 
+local Origin = Point(0, 0)
+
 function P_mt.__index.rot(M, C, theta)
+    if theta == nil then C, theta = Origin, C end
     local x, y = (M-C):unpack()
     local xr = x*cos(theta) - y*sin(theta)
     local yr = x*sin(theta) + y*cos(theta)
