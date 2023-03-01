@@ -61,8 +61,6 @@ local function quote(s)
 end
 
 local function fmt_num_raw(x)
-    local i = math.floor(x)
-    if i == x then return ('%d'):format(i) end
     return ('%.2f'):format(x):gsub("%.0+$", "")
 end
 
@@ -71,7 +69,14 @@ local function fmt_num(x)
 end
 
 local function fmt_points(ps)
-    return quote(ps:words():map(function(p) return p:split ",":map(fmt_num_raw):str "," end):unwords())
+    if type(ps) == "string" then
+        ps = ps:words():map(function(p) return p:split ",":map(tonumber) end)
+    end
+    return quote(ps:map(function(p) return F.map(fmt_num_raw, p):str "," end):unwords())
+end
+
+local function fmt_default(x)
+    return ('"%s"'):format(x)
 end
 
 local fmt = {
@@ -85,13 +90,23 @@ local fmt = {
     points = fmt_points,
 }
 
+local function rewrite(attrs)
+    attrs = F.clone(attrs)
+    if attrs.xy  then attrs.x,  attrs.y  = F.unpack(attrs.xy);  attrs.xy  = nil end
+    if attrs.xy1 then attrs.x1, attrs.y1 = F.unpack(attrs.xy1); attrs.xy1 = nil end
+    if attrs.xy2 then attrs.x2, attrs.y2 = F.unpack(attrs.xy2); attrs.xy2 = nil end
+    if attrs.cxy then attrs.cx, attrs.cy = F.unpack(attrs.cxy); attrs.cxy = nil end
+    return attrs
+end
+
 function node_mt:__tostring()
     local nl = self.contents:filter(function(t) return type(t) == "table" end):null() and {} or "\n"
+    local attrs = rewrite(self.attrs)
     return F.flatten {
         "<", self.name,
-        self.attrs:items():map(function(kv)
+        attrs:items():map(function(kv)
             local k, v = F.unpack(kv)
-            local f = fmt[k] or (function(x) return ('"%s"'):format(x) end)
+            local f = fmt[k] or fmt_default
             return { " ", k:gsub("_", "-"), "=", f(v) }
         end),
         #self.contents == 0
@@ -131,13 +146,16 @@ function Frame(t)
     local function try(y) return ty(0) - ty(y) end
     local id = F.id
 
-    local function txy(s)
-        return s:words()
-            :map(function(xy)
-                local x, y = xy:split(","):map(tonumber):unpack()
-                return F{tx(x), ty(y)}:str ","
-            end)
-            :unwords()
+    local function txy(xy)
+        local x, y = F.unpack(xy)
+        return {tx(x), ty(y)}
+    end
+
+    local function txys(ps)
+        if type(ps) == "string" then
+            ps = ps:words():map(function(p) return p:split ",":map(tonumber) end)
+        end
+        return ps:map(txy)
     end
 
     local m = {
@@ -145,7 +163,9 @@ function Frame(t)
         y = ty, y1 = ty, y2 = ty,
         width = tx, height = ty,
         cx = tx, cy = ty, r = trx, rx = trx, ry = try,
-        points = txy,
+        points = txys,
+        xy = txy, xy1 = txy, xy2 = txy,
+        cxy = txy,
     }
 
     local function transform(node)

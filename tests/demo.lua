@@ -75,8 +75,8 @@ local function graph(xmin, xmax, f)
     return F.range(0, n):map(function(i)
         local x = xmin + i*dx
         local y = f(x)
-        return F{x, y}:map(tostring):str ","
-    end):unwords()
+        return Point(x, y)
+    end)
 end
 
 local sin_graph = G {
@@ -172,7 +172,7 @@ do
         if e < emin then return 0 end
 
         local color = e > ethr and "brown" or "green"
-        tree { Line (M0:xy1())(M1:xy2()) { stroke=color, stroke_width=2*e } }
+        tree { Line { xy1=M0, xy2=M1, stroke=color, stroke_width=2*e } }
 
         local R1 = M1 + k1*(M1-M0)
         local R2 = R1:rot(M1, theta1+prng:float(-0.1, 0.1))
@@ -205,10 +205,10 @@ do
         local t = math.sin(2*pi*M1:x()/15)
         local theta = -math.rad((t+1)*(theta2-theta1)/2+theta1)
         local M2 = M1:rot(M0, theta)
-        tree { Line(M0:xy1())(M2:xy2()) { stroke="green" } }
+        tree { Line { xy1=M0, xy2=M2, stroke="green" } }
         if prng:float() < 0.1 then
             -- this is a flower
-            tree { Circle (M2:cxy()) { r=0.2 } { stroke="white", fill="pink", stroke_width=2 } }
+            tree { Circle { cxy=M2, r=0.2 } { stroke="white", fill="pink", stroke_width=2 } }
             flowers = flowers + 1
         else
             blades = blades + 1
