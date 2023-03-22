@@ -17,7 +17,7 @@
 <text fill="blue" font-size="24" text-anchor="start" x="16.3" y="742.4">cos(x)/x</text>
 </g>
 <g stroke-linecap="round">
-<rect fill="skyblue" height="384" width="1280" x="512" y="384"/>
+<rect fill="skyblue" height="384" width="512" x="512" y="384"/>
 <circle cx="960" cy="480" fill="yellow" r="57.6"/>
 <ellipse cx="764.17" cy="460.5" fill="#EEEEEE" rx="35.85" ry="8.96"/>
 <ellipse cx="585.57" cy="517.36" fill="#EEEEEE" rx="41.89" ry="10.47"/>

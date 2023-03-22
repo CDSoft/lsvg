@@ -22,6 +22,10 @@ local F = require "F"
 local sh = require "sh"
 local fs = require "fs"
 
+local sin = math.sin
+local cos = math.cos
+local abs = math.abs
+
 ---------------------------------------------------------------------
 -- Generic SVG node
 ---------------------------------------------------------------------
@@ -189,8 +193,8 @@ function Frame(t)
 
     local function tx(x) return (x-xmin)*(Xmax-Xmin)/(xmax-xmin) + Xmin end
     local function ty(y) return (y-ymax)*(Ymax-Ymin)/(ymin-ymax) + Ymin end
-    local function trx(x) return tx(x) - tx(0) end
-    local function try(y) return ty(0) - ty(y) end
+    local function trx(x) return abs(tx(x) - tx(0)) end
+    local function try(y) return abs(ty(y) - ty(0)) end
     local id = F.id
 
     local function txy(xy)
@@ -208,7 +212,7 @@ function Frame(t)
     local m = {
         x = tx, x1 = tx, x2 = tx,
         y = ty, y1 = ty, y2 = ty,
-        width = tx, height = ty,
+        width = trx, height = try,
         cx = tx, cy = ty, r = trx, rx = trx, ry = try,
         points = txys,
         xy = txy, xy1 = txy, xy2 = txy,
@@ -249,9 +253,6 @@ end
 -- V:norm() is the norm of the vector
 -- V:direction() is the angle of the vector (atan2(y, x))
 -- V:unit() is a unit vector with the same direction than V
-
-local sin = math.sin
-local cos = math.cos
 
 local P_mt = {__index={}}
 
