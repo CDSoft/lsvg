@@ -99,33 +99,26 @@ local sin_graph = G {
 }
 
 ---------------------------------------------------------------------
--- Bottom left: cos graph with a different frame
+-- Bottom left: higher level nodes (arrows, axis, ...)
 ---------------------------------------------------------------------
 
 local bottom_left = Frame {
-    xmin = -2*pi,      Xmin = 0,
-    xmax =  2*pi,      Xmax = w,
-    ymin = -1.5,       Ymin = h,
-    ymax =  1.5,       Ymax = 2*h,
+    xmin =  0,      Xmin = 0,
+    xmax = 10,      Xmax = w,
+    ymin = 10,      Ymin = h,
+    ymax =  0,      Ymax = 2*h,
 }
 
-local cos_graph = G {
-    -- axis
-    Line { x1=-2*pi, y1=0, x2=2*pi, y2=0 } { stroke="red" },
-    Line { x1=0, y1=-1.5, x2=0, y2=1.5 } { stroke="red" },
-    -- graph
-    Polyline { stroke="green", fill="none" } {
-        points=graph(-2*pi, 2*pi, math.cos)
+local lsvg_nodes = G {
+    -- Arrows
+    font_size = 24,
+    tip = 1.0,
+    Arrow { Point(1, 2), Point(9, 2), stroke="red", stroke_width=2, tip=0.5,
+        Text "1-tip arrow" { anchor=0.2, dy=-12, stroke="black" },
     },
-    Polyline { stroke="blue", fill="none" } {
-        points=graph(-2*pi, 2*pi, function(x)
-            if x == 0 then return 0 end
-            return math.cos(x)/x
-        end)
+    Arrow { Point(1, 4), Point(9, 4), stroke="red", stroke_width=2, double=true,
+        Text "2-tip arrow" { anchor=0.5, dy=-12, stroke="black" },
     },
-    -- legend
-    Text "cos(x)"   { x = -2*pi+0.4, y = -1 }   { text_anchor="start", font_size=24, fill="green" },
-    Text "cos(x)/x" { x = -2*pi+0.4, y = -1.3 } { text_anchor="start", font_size=24, fill="blue" },
 }
 
 ---------------------------------------------------------------------
@@ -229,7 +222,7 @@ end
 img {
     Rect { x=0, y=0, width=2*w, height=2*h } { fill="lightgrey" },
     top_right(sin_graph),
-    bottom_left(cos_graph),
+    bottom_left(lsvg_nodes),
     bottom_right(tree),
     flag,
     title,
