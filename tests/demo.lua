@@ -30,6 +30,13 @@ img {
 local w = img.attrs.width // 2
 local h = img.attrs.height // 2
 
+local pi = math.pi
+local sin = math.sin
+local rad = math.rad
+local min = math.min
+local abs = F.abs
+local round = F.round
+
 ---------------------------------------------------------------------
 -- Top left: French flag with some text
 ---------------------------------------------------------------------
@@ -52,21 +59,19 @@ local title = G {
         stroke="cyan", stroke_width=w/32, stroke_opacity=0.4
     },
     -- Text given on the command line
-    Text(arg[1]) {x = w/2, y = h/2-w/8/2},
-    Text(arg[2]) {x = w/2, y = h/2+w/8/2},
+    Text(arg[1] or "") {x = w/2, y = h/2-w/8/2},
+    Text(arg[2] or "") {x = w/2, y = h/2+w/8/2},
 }
 
 ---------------------------------------------------------------------
 -- Top right: sin graph with a different frame
 ---------------------------------------------------------------------
 
-local pi = math.pi
-
 local top_right = Frame {
-    xmin = -2*pi,      Xmin = w,
-    xmax =  2*pi,      Xmax = 2*w,
-    ymin = -1.5,       Ymin = 0,
-    ymax =  1.5,       Ymax = h,
+    xmin = -2*pi-pi/4,  Xmin = w,
+    xmax =  2*pi+pi/4,  Xmax = 2*w,
+    ymin = -1.5-0.2,    Ymin = 0,
+    ymax =  1.5+0.2,    Ymax = h,
 }
 
 local function graph(xmin, xmax, f)
@@ -79,18 +84,28 @@ local function graph(xmin, xmax, f)
     end)
 end
 
+local function piratio(x)
+    local k = qmath.new(round(2*x/pi), 2)
+    local n, d = abs(k:numer():tonumber()), k:denom(k):tonumber()
+    return F.str {
+        x < 0 and "-" or "",
+        n == 0 and "" or n == 1 and "π" or ("%dπ"):format(n),
+        d == 1 and "" or ("/%d"):format(d)
+    }
+end
+
 local sin_graph = G {
     -- axis
-    Line { x1=-2*pi, y1=0, x2=2*pi, y2=0 } { stroke="red" },
-    Line { x1=0, y1=-1.5, x2=0, y2=1.5 } { stroke="red" },
+    Axis { Point(-2*pi,0), Point(2*pi,0), stroke="red", grad = {-2*pi, 2*pi, pi/2, text={fill="black", font_size=20, dy=24, fmt=piratio}}, },
+    Axis { Point(0,-1.5), Point(0,1.5), stroke="red", grad = {-1.5, 1.5, 0.5, text={fill="black", font_size=20, dx=-24, fmt="%.1f"}}, },
     -- graph
     Polyline { stroke="green", fill="none" } {
-        points=graph(-2*pi, 2*pi, math.sin)
+        points=graph(-2*pi, 2*pi, sin)
     },
     Polyline { stroke="blue", fill="none" } {
         points=graph(-2*pi, 2*pi, function(x)
             if x == 0 then return 1 end
-            return math.sin(x)/x
+            return sin(x)/x
         end)
     },
     -- legend
@@ -99,7 +114,7 @@ local sin_graph = G {
 }
 
 ---------------------------------------------------------------------
--- Bottom left: higher level nodes (arrows, axis, ...)
+-- Bottom left: higher level nodes (arrows, axes, ...)
 ---------------------------------------------------------------------
 
 local bottom_left = Frame {
@@ -111,13 +126,29 @@ local bottom_left = Frame {
 
 local lsvg_nodes = G {
     -- Arrows
-    font_size = 24,
-    tip = 1.0,
-    Arrow { Point(1, 2), Point(9, 2), stroke="red", stroke_width=2, tip=0.5,
-        Text "1-tip arrow" { anchor=0.2, dy=-12, stroke="black" },
+    font_size = 20,
+    arrowhead = 1.0,
+    Arrow { Point(1, 2), Point(9, 2), stroke="red", stroke_width=2, arrowhead=0.5,
+        Text "anchor=0.2" { anchor=0.2, dy=-12, stroke="black", fill="black", stroke_width=1 },
+        Text "anchor=0.8" { anchor=0.8, dy=-12, stroke="black", fill="black", stroke_width=1 },
     },
     Arrow { Point(1, 4), Point(9, 4), stroke="red", stroke_width=2, double=true,
-        Text "2-tip arrow" { anchor=0.5, dy=-12, stroke="black" },
+        Text "default anchor" { dy=-12, stroke="black", fill="black" },
+    },
+    -- Axes
+    Axis { Point(1, 6), Point(9, 6), stroke="red", stroke_width=2, arrowhead=0.5,
+        grad = { 0, 10, 1,
+            height = 12,
+        },
+        Text "O" { anchor=0, dx=-24, stroke="black" },
+        Text "x" { anchor=1, dx=24, stroke="black" },
+    },
+    Axis { Point(1, 8), Point(9, 8), stroke="red", stroke_width=2, arrowhead=0.25,
+        grad = { 42, 50, 2, 0.5,
+            height = 12,
+            text = {dy=32, fill="black"},
+        },
+        Text "y" { anchor=1, dx=24, stroke="black" },
     },
 }
 
@@ -144,7 +175,7 @@ do
     for _ = 1, 80 do
         local x = prng:float(-15, 15)
         local y = prng:float(25, 40)
-        local r = prng:float(0, math.min(5, 40-y))
+        local r = prng:float(0, min(5, 40-y))
         tree { Ellipse { cx=x, cy=y, rx=r, ry=r/3 } { fill="#EEEEEE" } }
     end
 end
@@ -153,8 +184,8 @@ end
 do
     local k1 = 0.70
     local k2 = 0.75
-    local theta1 = math.rad(-35)
-    local theta2 = math.rad(19)
+    local theta1 = rad(-35)
+    local theta2 = rad(19)
     local e0 = 20
     local ethr = 6
     local ke = 0.75
@@ -195,8 +226,8 @@ do
     for _ = 1, 500 do
         local M1 = Point(prng:float(-20, 20), prng:float(0.5, 2))
         local M0 = Point(M1:x(), 0)
-        local t = math.sin(2*pi*M1:x()/15)
-        local theta = -math.rad((t+1)*(theta2-theta1)/2+theta1) + prng:float(-0.2, 0.2)
+        local t = sin(2*pi*M1:x()/15)
+        local theta = -rad((t+1)*(theta2-theta1)/2+theta1) + prng:float(-0.2, 0.2)
         local M2 = M1:rot(M0, theta)
         tree { Line { xy1=M0, xy2=M2, stroke="green" } }
         if prng:float() < 0.15 then

@@ -22,11 +22,11 @@ local F = require "F"
 local sh = require "sh"
 local fs = require "fs"
 
+local pi = math.pi
 local sin = math.sin
 local cos = math.cos
+local atan = math.atan
 local abs = math.abs
-local min = math.min
-local max = math.max
 
 ---------------------------------------------------------------------
 -- Points and vectors
@@ -70,7 +70,7 @@ function P_mt.__index:xy2() return {x2=self[1], y2=self[2]} end
 function P_mt.__index:cxy() return {cx=self[1], cy=self[2]} end
 
 function P_mt.__index:norm() return (self[1]^2 + self[2]^2)^0.5 end
-function P_mt.__index:direction() return math.atan(self[2], self[1]) end
+function P_mt.__index:direction() return atan(self[2], self[1]) end
 
 function P_mt.__index:unit() return self/self:norm() end
 
@@ -135,6 +135,7 @@ end
 
 local node_mt = {__index = {}}
 local arrow_mt = {__index = {}}
+local axis_mt = {__index = {}}
 
 local function Node(name)
     local self = {
@@ -152,6 +153,8 @@ function node_mt:__call(x)
     elseif type(x) == "table" and getmetatable(x) == node_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" and getmetatable(x) == arrow_mt then
+        self.contents[#self.contents+1] = x
+    elseif type(x) == "table" and getmetatable(x) == axis_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" then
         F(x):mapk(function(k, v)
@@ -236,8 +239,11 @@ end
 
 function node_mt.__index:propagate(t)
     local t2 = t:patch {
-        tip = self.attrs.tip,
+        arrowhead = self.attrs.arrowhead,
         anchor = self.attrs.anchor,
+        origin = self.attrs.origin,
+        primary = self.attrs.primary,
+        secondary = self.attrs.secondary,
     }
     self.contents:map(function(item)
         local mt = getmetatable(item)
@@ -245,7 +251,7 @@ function node_mt.__index:propagate(t)
     end)
 end
 
-local attributes_to_remove = F{"tip", "anchor"}:from_set(F.const(true))
+local attributes_to_remove = ("arrowhead anchor double grad fmt"):words():from_set(F.const(true))
 local function is_svg_attribute(kv) return not attributes_to_remove[kv[1]] end
 
 -- __tostring produces an SVG description of a node and its children.
@@ -293,7 +299,7 @@ end
 ---------------------------------------------------------------------
 
 -- An Arrow node is a meta node that builds an arrow with one or two
--- tips and an optional text.
+-- arrowheads and an optional text.
 local function Arrow(t)
     local self = {
         cons = function(_) return Arrow{} end,
@@ -331,7 +337,7 @@ function arrow_mt:__call(x)
 end
 
 function arrow_mt.__index:propagate(t)
-    self.attrs.tip = self.attrs.tip or t.tip
+    self.attrs.arrowhead = self.attrs.arrowhead or t.arrowhead
     self.attrs.anchor = self.attrs.anchor or t.anchor
 end
 
@@ -342,10 +348,10 @@ local function gen_arrow(arrow)
     local g = G(contents)
     local A, B = arrow.points:unpack()
     local length = (B-A):norm()
-    local tip = attrs.tip or length/4
+    local arrowhead = attrs.arrowhead or length/4
     local delta = attrs.delta or math.rad(15)
-    local A_ = A - tip/length*(A-B)
-    local B_ = B - tip/length*(B-A)
+    local A_ = A - arrowhead/length*(A-B)
+    local B_ = B - arrowhead/length*(B-A)
     g:Line(attrs)(A:xy1())(B:xy2())
     g:Line(attrs)(B:xy1())(B_:rot(B, delta):xy2())
     g:Line(attrs)(B:xy1())(B_:rot(B, -delta):xy2())
@@ -364,6 +370,111 @@ end
 -- __tostring produces an SVG description of an arrow
 function arrow_mt:__tostring()
     return tostring(gen_arrow(self))
+end
+
+---------------------------------------------------------------------
+-- Axis SVG node
+---------------------------------------------------------------------
+
+-- An Axis node is a meta node that builds an axis with an arrow
+-- and optional texts.
+local function Axis(t)
+    local self = {
+        cons = function(_) return Axis{} end,
+        name = "Axis",
+        points = F{},
+        attrs = F{},
+        contents = F{},
+    }
+    return setmetatable(self, axis_mt)(t)
+end
+
+function axis_mt:__call(x)
+    if is_point(x) then
+        self.points[#self.points+1] = x
+    elseif type(x) == "string" then
+        self.contents[#self.contents+1] = x
+    elseif type(x) == "table" and getmetatable(x) == node_mt then
+        self.contents[#self.contents+1] = x
+    elseif type(x) == "table" then
+        F(x):mapk(function(k, v)
+            if type(k) == "string" then
+                self.attrs[k] = v
+            elseif type(k) == "number" and math.type(k) == "integer" then
+                if is_point(v) then
+                    self.points[#self.points+1] = v
+                else
+                    self.contents[#self.contents+1] = v
+                end
+            end
+        end)
+    else
+        error("Invalid axis item: "..F.show(x))
+    end
+    return self
+end
+
+function axis_mt.__index:propagate(t)
+    self.attrs.arrowhead = self.attrs.arrowhead or t.arrowhead
+    self.attrs.anchor = self.attrs.anchor or t.anchor
+    self.attrs.origin = self.attrs.origin or t.origin
+    self.attrs.primary = self.attrs.primary or t.primary
+    self.attrs.secondary = self.attrs.secondary or t.secondary
+end
+
+local function gen_axis(axis)
+    assert(#axis.points == 2, "An axis requires 2 points")
+    local attrs = axis.attrs or {}
+    local contents = axis.contents or {}
+    local g = G(contents)
+    local A, B = axis.points:unpack()
+    local length = (B-A):norm()
+    local arrowhead = attrs.arrowhead or length/4
+    local delta = attrs.delta or math.rad(15)
+    local B_ = B - arrowhead/length*(B-A)
+    g:Line(attrs)(A:xy1())(B:xy2())
+    if attrs.arrowhead then
+        g:Line(attrs)(B:xy1())(B_:rot(B, delta):xy2())
+        g:Line(attrs)(B:xy1())(B_:rot(B, -delta):xy2())
+    end
+    local function graduations(x0, x1, dx, height_ratio, grad, text_attrs)
+        if not dx then return end
+        local h = grad.height or length/((x1-x0)/dx)/5
+        h = h * height_ratio
+        for x = x0, x1, dx do
+            local M = A + (x-x0)/(x1-x0)*(B-A)
+            if abs(x-x1) > dx/2 or not attrs.arrowhead then
+                local M0 = M + (B-A)/length*h
+                local M1 = M0:rot(M, pi/2)
+                local M2 = M0:rot(M, -pi/2)
+                g:Line(attrs)(M1:xy1())(M2:xy2())
+            end
+            if text_attrs then
+                local format =
+                    type(text_attrs.fmt) == "string"
+                        and function(...) return text_attrs.fmt:format(...) end
+                    or text_attrs.fmt
+                    or F.id
+                g:Text(text_attrs)(tostring(format(x)))(M:xy())
+            end
+        end
+    end
+    if attrs.grad then
+        local x0, x1, dx1, dx2 = table.unpack(attrs.grad)
+        graduations(x0, x1, dx1, 1, attrs.grad, attrs.grad.text)
+        graduations(x0, x1, dx2, 0.5, attrs.grad, nil)
+    end
+    contents:map(function(item)
+        local anchor = item.attrs.anchor or 0.5
+        local M = (1-anchor)*A + anchor*B
+        g { item { xy=M } }
+    end)
+    return g
+end
+
+-- __tostring produces an SVG description of an axis
+function axis_mt:__tostring()
+    return tostring(gen_axis(self))
 end
 
 ---------------------------------------------------------------------
@@ -408,7 +519,7 @@ function Frame(t)
         points = txys,
         xy = txy, xy1 = txy, xy2 = txy,
         cxy = txy,
-        tip = trx,
+        arrowhead = trx,
     }
 
     local function transform(node)
@@ -450,7 +561,7 @@ local svg = {}
 local svg_mt = {}
 
 local primitive_nodes = "g text rect circle ellipse line polygon polyline path"
-local custom_nodes = F{ arrow=Arrow, }
+local custom_nodes = F{ arrow=Arrow, axis=Axis, }
 
 primitive_nodes:words():map(function(name)
     svg[name:cap()] = function(t) return Node(name)(t) end
