@@ -54,9 +54,9 @@ local function is_point(M)
     return type(M) == "table" and getmetatable(M) == P_mt
 end
 
-function Point(x, y) return setmetatable({x, y}, P_mt) end
+local function Point(x, y) return setmetatable({x, y}, P_mt) end
 
-function Vector(...) return Point(...) end
+local function Vector(...) return Point(...) end
 
 function P_mt.__index:unpack() return F.unpack(self) end
 
@@ -478,6 +478,21 @@ function axis_mt:__tostring()
 end
 
 ---------------------------------------------------------------------
+-- Equations
+---------------------------------------------------------------------
+
+-- Basic equation formatter (superscript and subscript support only)
+local function eqn(s)
+    local pos = { ['_']="sub", ['^']="super" }
+    local function f(op, x)
+        return ('<tspan baseline-shift="%s" font-size="0.75em">%s</tspan>'):format(pos[op], x)
+    end
+    return s
+    : gsub("([_^])(%b{})", function(c, x) return f(c, eqn(x:sub(2, -2))) end)
+    : gsub("([_^])(.)",    function(c, x) return f(c, eqn(x:sub(1, -1))) end)
+end
+
+---------------------------------------------------------------------
 -- Frames
 ---------------------------------------------------------------------
 
@@ -489,7 +504,7 @@ end
 -- I.e. fields like x, y, x1, y1, x2, y2, cx, cy, r, rx, ry, width, height, points
 -- are recomputed. Other fields (e.g. stroke_width, font_size) are keep to avoid
 -- changing the aspect of the image.
-function Frame(t)
+local function Frame(t)
     local xmin, ymin, xmax, ymax = t.xmin, t.ymin, t.xmax, t.ymax
     local Xmin, Ymin, Xmax, Ymax = t.Xmin, t.Ymin, t.Xmax, t.Ymax
 
@@ -557,7 +572,12 @@ end
 -- SVG module
 ---------------------------------------------------------------------
 
-local svg = {}
+local svg = {
+    Point = Point,
+    Vector = Vector,
+    Frame = Frame,
+    eqn = eqn,
+}
 local svg_mt = {}
 
 local primitive_nodes = "g text rect circle ellipse line polygon polyline path"

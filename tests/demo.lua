@@ -120,7 +120,7 @@ local sin_graph = G {
 local bottom_left = Frame {
     xmin =  0,      Xmin = 0,
     xmax = 10,      Xmax = w,
-    ymin = 10,      Ymin = h,
+    ymin = 4,       Ymin = h,
     ymax =  0,      Ymax = 2*h,
 }
 
@@ -128,28 +128,31 @@ local lsvg_nodes = G {
     -- Arrows
     font_size = 20,
     arrowhead = 1.0,
-    Arrow { Point(1, 2), Point(9, 2), stroke="red", stroke_width=2, arrowhead=0.5,
+    Arrow { Point(1, 1), Point(4, 1), stroke="red", stroke_width=2, arrowhead=0.5,
         Text "anchor=0.2" { anchor=0.2, dy=-12, stroke="black", fill="black", stroke_width=1 },
-        Text "anchor=0.8" { anchor=0.8, dy=-12, stroke="black", fill="black", stroke_width=1 },
+        Text "anchor=0.8" { anchor=0.8, dy=24, stroke="black", fill="black", stroke_width=1 },
     },
-    Arrow { Point(1, 4), Point(9, 4), stroke="red", stroke_width=2, double=true,
+    Arrow { Point(5, 1), Point(9, 1), stroke="red", stroke_width=2, double=true, arrowhead=0.7,
         Text "default anchor" { dy=-12, stroke="black", fill="black" },
     },
     -- Axes
-    Axis { Point(1, 6), Point(9, 6), stroke="red", stroke_width=2, arrowhead=0.5,
+    Axis { Point(1, 2), Point(4, 2), stroke="red", stroke_width=2, arrowhead=0.5,
         grad = { 0, 10, 1,
-            height = 12,
+            height = 6,
         },
-        Text "O" { anchor=0, dx=-24, stroke="black" },
-        Text "x" { anchor=1, dx=24, stroke="black" },
+        Text "O" { anchor=0, dx=-12, stroke="black" },
+        Text "x" { anchor=1, dx=12, stroke="black" },
     },
-    Axis { Point(1, 8), Point(9, 8), stroke="red", stroke_width=2, arrowhead=0.25,
+    Axis { Point(5, 2), Point(9, 2), stroke="red", stroke_width=2, arrowhead=0.25,
         grad = { 42, 50, 2, 0.5,
             height = 12,
             text = {dy=32, fill="black"},
         },
-        Text "y" { anchor=1, dx=24, stroke="black" },
+        Text "y" { anchor=1, dx=12, stroke="black" },
     },
+    -- superscript and subscript in text elements
+    Text (eqn"x^{m+n} = x^m x^n")       { xy=Point(1, 3), text_anchor="start", fill="blue" },
+    Text (eqn"F_n = F_{n-1} + F_{n-2}") { xy=Point(5, 3), text_anchor="start", fill="red" },
 }
 
 ---------------------------------------------------------------------

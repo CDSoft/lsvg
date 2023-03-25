@@ -46,74 +46,76 @@
 </g>
 <g font-size="20">
 <g>
-<text dy="-12" fill="black" stroke="black" stroke-width="1" x="133.12" y="460.8">anchor=0.2</text>
-<text dy="-12" fill="black" stroke="black" stroke-width="1" x="378.88" y="460.8">anchor=0.8</text>
-<line stroke="red" stroke-width="2" x1="51.2" x2="460.8" y1="460.8" y2="460.8"/>
-<line stroke="red" stroke-width="2" x1="460.8" x2="436.07" y1="460.8" y2="454.17"/>
-<line stroke="red" stroke-width="2" x1="460.8" x2="436.07" y1="460.8" y2="467.43"/>
-<text dy="-12" fill="black" stroke="black" stroke-width="1" x="133.12" y="460.8">anchor=0.2</text>
-<text dy="-12" fill="black" stroke="black" stroke-width="1" x="378.88" y="460.8">anchor=0.8</text>
+<text dy="-12" fill="black" stroke="black" stroke-width="1" x="81.92" y="480">anchor=0.2</text>
+<text dy="24" fill="black" stroke="black" stroke-width="1" x="174.08" y="480">anchor=0.8</text>
+<line stroke="red" stroke-width="2" x1="51.2" x2="204.8" y1="480" y2="480"/>
+<line stroke="red" stroke-width="2" x1="204.8" x2="180.07" y1="480" y2="473.37"/>
+<line stroke="red" stroke-width="2" x1="204.8" x2="180.07" y1="480" y2="486.63"/>
+<text dy="-12" fill="black" stroke="black" stroke-width="1" x="81.92" y="480">anchor=0.2</text>
+<text dy="24" fill="black" stroke="black" stroke-width="1" x="174.08" y="480">anchor=0.8</text>
 </g>
 <g>
-<text dy="-12" fill="black" stroke="black" x="256" y="537.6">default anchor</text>
-<line stroke="red" stroke-width="2" x1="51.2" x2="460.8" y1="537.6" y2="537.6"/>
-<line stroke="red" stroke-width="2" x1="460.8" x2="411.34" y1="537.6" y2="524.35"/>
-<line stroke="red" stroke-width="2" x1="460.8" x2="411.34" y1="537.6" y2="550.85"/>
-<line stroke="red" stroke-width="2" x1="51.2" x2="100.66" y1="537.6" y2="550.85"/>
-<line stroke="red" stroke-width="2" x1="51.2" x2="100.66" y1="537.6" y2="524.35"/>
-<text dy="-12" fill="black" stroke="black" x="256" y="537.6">default anchor</text>
+<text dy="-12" fill="black" stroke="black" x="358.4" y="480">default anchor</text>
+<line stroke="red" stroke-width="2" x1="256" x2="460.8" y1="480" y2="480"/>
+<line stroke="red" stroke-width="2" x1="460.8" x2="426.18" y1="480" y2="470.72"/>
+<line stroke="red" stroke-width="2" x1="460.8" x2="426.18" y1="480" y2="489.28"/>
+<line stroke="red" stroke-width="2" x1="256" x2="290.62" y1="480" y2="489.28"/>
+<line stroke="red" stroke-width="2" x1="256" x2="290.62" y1="480" y2="470.72"/>
+<text dy="-12" fill="black" stroke="black" x="358.4" y="480">default anchor</text>
 </g>
 <g>
-<text dx="-24" stroke="black" x="51.2" y="614.4">O</text>
-<text dx="24" stroke="black" x="460.8" y="614.4">x</text>
-<line stroke="red" stroke-width="2" x1="51.2" x2="460.8" y1="614.4" y2="614.4"/>
-<line stroke="red" stroke-width="2" x1="460.8" x2="436.07" y1="614.4" y2="607.77"/>
-<line stroke="red" stroke-width="2" x1="460.8" x2="436.07" y1="614.4" y2="621.03"/>
-<line stroke="red" stroke-width="2" x1="51.2" x2="51.2" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="92.16" x2="92.16" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="133.12" x2="133.12" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="174.08" x2="174.08" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="215.04" x2="215.04" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="256" x2="256" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="296.96" x2="296.96" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="337.92" x2="337.92" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="378.88" x2="378.88" y1="626.4" y2="602.4"/>
-<line stroke="red" stroke-width="2" x1="419.84" x2="419.84" y1="626.4" y2="602.4"/>
-<text dx="-24" stroke="black" x="51.2" y="614.4">O</text>
-<text dx="24" stroke="black" x="460.8" y="614.4">x</text>
+<text dx="-12" stroke="black" x="51.2" y="576">O</text>
+<text dx="12" stroke="black" x="204.8" y="576">x</text>
+<line stroke="red" stroke-width="2" x1="51.2" x2="204.8" y1="576" y2="576"/>
+<line stroke="red" stroke-width="2" x1="204.8" x2="180.07" y1="576" y2="569.37"/>
+<line stroke="red" stroke-width="2" x1="204.8" x2="180.07" y1="576" y2="582.63"/>
+<line stroke="red" stroke-width="2" x1="51.2" x2="51.2" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="66.56" x2="66.56" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="81.92" x2="81.92" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="97.28" x2="97.28" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="112.64" x2="112.64" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="128" x2="128" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="143.36" x2="143.36" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="158.72" x2="158.72" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="174.08" x2="174.08" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="189.44" x2="189.44" y1="582" y2="570"/>
+<text dx="-12" stroke="black" x="51.2" y="576">O</text>
+<text dx="12" stroke="black" x="204.8" y="576">x</text>
 </g>
 <g>
-<text dx="24" stroke="black" x="460.8" y="691.2">y</text>
-<line stroke="red" stroke-width="2" x1="51.2" x2="460.8" y1="691.2" y2="691.2"/>
-<line stroke="red" stroke-width="2" x1="460.8" x2="448.44" y1="691.2" y2="687.89"/>
-<line stroke="red" stroke-width="2" x1="460.8" x2="448.44" y1="691.2" y2="694.51"/>
-<line stroke="red" stroke-width="2" x1="51.2" x2="51.2" y1="703.2" y2="679.2"/>
-<text dy="32" fill="black" x="51.2" y="691.2">42</text>
-<line stroke="red" stroke-width="2" x1="153.6" x2="153.6" y1="703.2" y2="679.2"/>
-<text dy="32" fill="black" x="153.6" y="691.2">44</text>
-<line stroke="red" stroke-width="2" x1="256" x2="256" y1="703.2" y2="679.2"/>
-<text dy="32" fill="black" x="256" y="691.2">46</text>
-<line stroke="red" stroke-width="2" x1="358.4" x2="358.4" y1="703.2" y2="679.2"/>
-<text dy="32" fill="black" x="358.4" y="691.2">48</text>
-<text dy="32" fill="black" x="460.8" y="691.2">50</text>
-<line stroke="red" stroke-width="2" x1="51.2" x2="51.2" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="76.8" x2="76.8" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="102.4" x2="102.4" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="128" x2="128" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="153.6" x2="153.6" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="179.2" x2="179.2" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="204.8" x2="204.8" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="230.4" x2="230.4" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="256" x2="256" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="281.6" x2="281.6" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="307.2" x2="307.2" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="332.8" x2="332.8" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="358.4" x2="358.4" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="384" x2="384" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="409.6" x2="409.6" y1="697.2" y2="685.2"/>
-<line stroke="red" stroke-width="2" x1="435.2" x2="435.2" y1="697.2" y2="685.2"/>
-<text dx="24" stroke="black" x="460.8" y="691.2">y</text>
+<text dx="12" stroke="black" x="460.8" y="576">y</text>
+<line stroke="red" stroke-width="2" x1="256" x2="460.8" y1="576" y2="576"/>
+<line stroke="red" stroke-width="2" x1="460.8" x2="448.44" y1="576" y2="572.69"/>
+<line stroke="red" stroke-width="2" x1="460.8" x2="448.44" y1="576" y2="579.31"/>
+<line stroke="red" stroke-width="2" x1="256" x2="256" y1="588" y2="564"/>
+<text dy="32" fill="black" x="256" y="576">42</text>
+<line stroke="red" stroke-width="2" x1="307.2" x2="307.2" y1="588" y2="564"/>
+<text dy="32" fill="black" x="307.2" y="576">44</text>
+<line stroke="red" stroke-width="2" x1="358.4" x2="358.4" y1="588" y2="564"/>
+<text dy="32" fill="black" x="358.4" y="576">46</text>
+<line stroke="red" stroke-width="2" x1="409.6" x2="409.6" y1="588" y2="564"/>
+<text dy="32" fill="black" x="409.6" y="576">48</text>
+<text dy="32" fill="black" x="460.8" y="576">50</text>
+<line stroke="red" stroke-width="2" x1="256" x2="256" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="268.8" x2="268.8" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="281.6" x2="281.6" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="294.4" x2="294.4" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="307.2" x2="307.2" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="320" x2="320" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="332.8" x2="332.8" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="345.6" x2="345.6" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="358.4" x2="358.4" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="371.2" x2="371.2" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="384" x2="384" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="396.8" x2="396.8" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="409.6" x2="409.6" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="422.4" x2="422.4" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="435.2" x2="435.2" y1="582" y2="570"/>
+<line stroke="red" stroke-width="2" x1="448" x2="448" y1="582" y2="570"/>
+<text dx="12" stroke="black" x="460.8" y="576">y</text>
 </g>
+<text fill="blue" text-anchor="start" x="51.2" y="672">x<tspan baseline-shift="super" font-size="0.75em">m+n</tspan> = x<tspan baseline-shift="super" font-size="0.75em">m</tspan> x<tspan baseline-shift="super" font-size="0.75em">n</tspan></text>
+<text fill="red" text-anchor="start" x="256" y="672">F<tspan baseline-shift="sub" font-size="0.75em">n</tspan> = F<tspan baseline-shift="sub" font-size="0.75em">n-1</tspan> + F<tspan baseline-shift="sub" font-size="0.75em">n-2</tspan></text>
 </g>
 <g stroke-linecap="round">
 <rect fill="skyblue" height="384" width="512" x="512" y="384"/>
