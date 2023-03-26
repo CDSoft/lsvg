@@ -46,26 +46,26 @@
 </g>
 <g font-size="20">
 <g>
-<text dy="-12" fill="black" stroke="black" stroke-width="1" x="81.92" y="480">anchor=0.2</text>
-<text dy="24" fill="black" stroke="black" stroke-width="1" x="174.08" y="480">anchor=0.8</text>
+<text dy="-12" fill="black" x="81.92" y="480">anchor=0.2</text>
+<text dy="24" fill="black" x="174.08" y="480">anchor=0.8</text>
 <line stroke="red" stroke-width="2" x1="51.2" x2="204.8" y1="480" y2="480"/>
 <line stroke="red" stroke-width="2" x1="204.8" x2="180.07" y1="480" y2="473.37"/>
 <line stroke="red" stroke-width="2" x1="204.8" x2="180.07" y1="480" y2="486.63"/>
-<text dy="-12" fill="black" stroke="black" stroke-width="1" x="81.92" y="480">anchor=0.2</text>
-<text dy="24" fill="black" stroke="black" stroke-width="1" x="174.08" y="480">anchor=0.8</text>
+<text dy="-12" fill="black" x="81.92" y="480">anchor=0.2</text>
+<text dy="24" fill="black" x="174.08" y="480">anchor=0.8</text>
 </g>
 <g>
-<text dy="-12" fill="black" stroke="black" x="358.4" y="480">default anchor</text>
+<text dy="-12" fill="black" x="358.4" y="480">default anchor</text>
 <line stroke="red" stroke-width="2" x1="256" x2="460.8" y1="480" y2="480"/>
 <line stroke="red" stroke-width="2" x1="460.8" x2="426.18" y1="480" y2="470.72"/>
 <line stroke="red" stroke-width="2" x1="460.8" x2="426.18" y1="480" y2="489.28"/>
 <line stroke="red" stroke-width="2" x1="256" x2="290.62" y1="480" y2="489.28"/>
 <line stroke="red" stroke-width="2" x1="256" x2="290.62" y1="480" y2="470.72"/>
-<text dy="-12" fill="black" stroke="black" x="358.4" y="480">default anchor</text>
+<text dy="-12" fill="black" x="358.4" y="480">default anchor</text>
 </g>
 <g>
-<text dx="-12" stroke="black" x="51.2" y="576">O</text>
-<text dx="12" stroke="black" x="204.8" y="576">x</text>
+<text dx="-12" fill="black" x="51.2" y="576">O</text>
+<text dx="12" fill="black" x="204.8" y="576">x</text>
 <line stroke="red" stroke-width="2" x1="51.2" x2="204.8" y1="576" y2="576"/>
 <line stroke="red" stroke-width="2" x1="204.8" x2="180.07" y1="576" y2="569.37"/>
 <line stroke="red" stroke-width="2" x1="204.8" x2="180.07" y1="576" y2="582.63"/>
@@ -79,11 +79,11 @@
 <line stroke="red" stroke-width="2" x1="158.72" x2="158.72" y1="582" y2="570"/>
 <line stroke="red" stroke-width="2" x1="174.08" x2="174.08" y1="582" y2="570"/>
 <line stroke="red" stroke-width="2" x1="189.44" x2="189.44" y1="582" y2="570"/>
-<text dx="-12" stroke="black" x="51.2" y="576">O</text>
-<text dx="12" stroke="black" x="204.8" y="576">x</text>
+<text dx="-12" fill="black" x="51.2" y="576">O</text>
+<text dx="12" fill="black" x="204.8" y="576">x</text>
 </g>
 <g>
-<text dx="12" stroke="black" x="460.8" y="576">y</text>
+<text dx="12" fill="black" x="460.8" y="576">y</text>
 <line stroke="red" stroke-width="2" x1="256" x2="460.8" y1="576" y2="576"/>
 <line stroke="red" stroke-width="2" x1="460.8" x2="448.44" y1="576" y2="572.69"/>
 <line stroke="red" stroke-width="2" x1="460.8" x2="448.44" y1="576" y2="579.31"/>
@@ -112,7 +112,7 @@
 <line stroke="red" stroke-width="2" x1="422.4" x2="422.4" y1="582" y2="570"/>
 <line stroke="red" stroke-width="2" x1="435.2" x2="435.2" y1="582" y2="570"/>
 <line stroke="red" stroke-width="2" x1="448" x2="448" y1="582" y2="570"/>
-<text dx="12" stroke="black" x="460.8" y="576">y</text>
+<text dx="12" fill="black" x="460.8" y="576">y</text>
 </g>
 <text fill="blue" text-anchor="start" x="51.2" y="672">x<tspan baseline-shift="super" font-size="0.75em">m+n</tspan> = x<tspan baseline-shift="super" font-size="0.75em">m</tspan> x<tspan baseline-shift="super" font-size="0.75em">n</tspan></text>
 <text fill="red" text-anchor="start" x="256" y="672">F<tspan baseline-shift="sub" font-size="0.75em">n</tspan> = F<tspan baseline-shift="sub" font-size="0.75em">n-1</tspan> + F<tspan baseline-shift="sub" font-size="0.75em">n-2</tspan></text>
@@ -2248,7 +2248,7 @@
 <line stroke="green" stroke-width="2.25" x1="540.26" x2="536.54" y1="563.42" y2="567.62"/>
 <line stroke="green" stroke-width="2.25" x1="540.26" x2="541.66" y1="563.42" y2="568.72"/>
 <text fill="brown" font-size="24" x="640" y="614.4">Fractal tree</text>
-<text fill="brown" font-size="24" x="640" y="643.2">2047 segments</text>
+<text fill="brown" font-size="20" x="640" y="643.2">2047 segments</text>
 <line stroke="green" x1="762.89" x2="768.96" y1="768" y2="757.38"/>
 <circle cx="768.96" cy="757.38" fill="purple" r="2.56" stroke="white" stroke-width="2"/>
 <line stroke="green" x1="549.84" x2="557.59" y1="768" y2="755.01"/>
@@ -2826,8 +2826,8 @@
 <line stroke="green" x1="970.6" x2="978.28" y1="768" y2="756.01"/>
 <line stroke="green" x1="617.99" x2="626.09" y1="768" y2="761.46"/>
 <text fill="green" font-size="24" x="640" y="672">Random vegetation</text>
-<text fill="green" font-size="24" x="640" y="700.8">424 blades</text>
-<text fill="white" font-size="24" x="640" y="729.6">76 flowers</text>
+<text fill="green" font-size="20" x="640" y="700.8">424 blades of grass</text>
+<text fill="purple" font-size="20" x="640" y="729.6">76 flowers</text>
 </g>
 <g>
 <rect fill="blue" height="384" width="170.67" x="0" y="0"/>
