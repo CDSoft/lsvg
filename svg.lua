@@ -255,7 +255,7 @@ function node_mt.__index:propagate(t)
     end)
 end
 
-local attributes_to_remove = ("arrowhead anchor double grad fmt"):words():from_set(F.const(true))
+local attributes_to_remove = ("arrowhead anchor double grad fmt dpi"):words():from_set(F.const(true))
 local function is_svg_attribute(kv) return not attributes_to_remove[kv[1]] end
 
 -- __tostring produces an SVG description of a node and its children.
@@ -287,11 +287,18 @@ function node_mt.__index:save(filename)
     if ext == ".svg" then
         return fs.write(filename, tostring(self))
     elseif ext == ".png" or ext == ".pdf" then
+        local dpi = self.attrs.dpi
         return fs.with_tmpdir(function(tmp)
             local tmpname = fs.join(tmp, fs.basename(base)..".svg")
             local ok, err = fs.write(tmpname, tostring(self))
             if not ok then return nil, err end
-            return sh.run("convert", tmpname, filename)
+            return sh.run {
+                "convert",
+                dpi and {
+                    "-units", "PixelsPerInch", "-density", dpi,
+                } or {},
+                tmpname, filename
+            }
         end)
     else
         error(filename..": image format not supported")
