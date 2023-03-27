@@ -134,6 +134,7 @@ end
 -- structure of the final SVG file.
 
 local node_mt = {__index = {}}
+local raw_mt = {__index = {}}
 local arrow_mt = {__index = {}}
 local axis_mt = {__index = {}}
 
@@ -151,6 +152,8 @@ function node_mt:__call(x)
     if type(x) == "string" then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" and getmetatable(x) == node_mt then
+        self.contents[#self.contents+1] = x
+    elseif type(x) == "table" and getmetatable(x) == raw_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" and getmetatable(x) == arrow_mt then
         self.contents[#self.contents+1] = x
@@ -292,6 +295,27 @@ function node_mt.__index:save(filename)
     else
         error(filename..": image format not supported")
     end
+end
+
+---------------------------------------------------------------------
+-- Raw SVG inclusion
+---------------------------------------------------------------------
+
+local function Raw(code)
+    local self = {
+        name = "Raw",
+        code = code,
+    }
+    return setmetatable(self, raw_mt)
+end
+
+local function gen_raw(raw)
+    return raw.code
+end
+
+-- __tostring produces an SVG description of an arrow
+function raw_mt:__tostring()
+    return tostring(gen_raw(self))
 end
 
 ---------------------------------------------------------------------
@@ -581,7 +605,7 @@ local svg = {
 local svg_mt = {}
 
 local primitive_nodes = "g text rect circle ellipse line polygon polyline path"
-local custom_nodes = F{ arrow=Arrow, axis=Axis, }
+local custom_nodes = F{ raw=Raw, arrow=Arrow, axis=Axis, }
 
 primitive_nodes:words():map(function(name)
     svg[name:cap()] = function(t) return Node(name)(t) end
