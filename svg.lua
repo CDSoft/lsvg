@@ -187,6 +187,7 @@ end
 
 -- format a number with a 2-digit precision
 local function fmt_num_raw(x)
+    if type(x) == "string" then return x end
     return ('%.2f'):format(x):gsub("0+$", ""):gsub("%.$", "")
 end
 
