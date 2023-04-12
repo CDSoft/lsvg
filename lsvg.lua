@@ -29,7 +29,7 @@ lsvg <Lua scripts> <output files> [-- <other args>]
 
 <output files>
     Output file names where the image is saved
-    (SVG or PNG)
+    (SVG, PNG or PDF)
 
 <other args>
     Arguments given to the input Lua scripts
@@ -58,7 +58,7 @@ for i = 1, #arg do
         arg = F.drop(i, arg)
         break
     else
-        io.stderr:write("Invalid argument: ", a, "\n")
+        io.stderr:write("Invalid argument: ", arg[i], "\n")
         io.stderr:write(usage)
         os.exit(1)
     end
