@@ -35,7 +35,6 @@ local sin = math.sin
 local rad = math.rad
 local min = math.min
 local abs = F.abs
-local round = F.round
 
 ---------------------------------------------------------------------
 -- Top left: French flag with some text
@@ -85,7 +84,7 @@ local function graph(xmin, xmax, f)
 end
 
 local function piratio(x)
-    local k = qmath.new(round(2*x/pi), 2)
+    local k = qmath.torat(x/pi)
     local n, d = abs(k:numer():tonumber()), k:denom(k):tonumber()
     return F.str {
         x < 0 and "-" or "",
