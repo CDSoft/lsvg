@@ -47,7 +47,7 @@ compile: $(LSVG_BIN)
 $(LSVG_BIN): lsvg.lua svg.lua | $(LUAX)
 	@echo '${BLACK}${BG_GREEN}[LUAX]${NORMAL} ${CYAN}compiling $@${NORMAL}'
 	@mkdir -p $(dir $@)
-	@$(LUAX) -o $@ $^
+	@$(LUAX) -q -o $@ $^
 
 ## Test lsvg
 test: $(BUILD)/demo.ok
