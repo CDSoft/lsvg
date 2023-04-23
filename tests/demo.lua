@@ -232,7 +232,7 @@ do
         local theta = -rad((t+1)*(theta2-theta1)/2+theta1) + prng:float(-0.2, 0.2)
         local M2 = M1:rot(M0, theta)
         tree { Line { xy1=M0, xy2=M2, stroke="green" } }
-        if prng:float() < 0.15 then
+        if prng:float() < 0.18 then
             -- this is a flower
             tree { Circle { cxy=M2, r=0.2 } { stroke="white", fill="purple", stroke_width=2 } }
             flowers = flowers + 1
