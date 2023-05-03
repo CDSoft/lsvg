@@ -12,11 +12,10 @@ library to generate SVG images. It optionally requires
 
 `lsvg` is available on Github: <https://github.com/CDSoft/lsvg>.
 
-`lsvg` uses [LuaX](https://github.com/CDSoft/luax) and
-[makex](https://github.com/CDSoft/makex). All dependencies are installed by
-make.
+`lsvg` uses [LuaX](https://github.com/CDSoft/luax).
 
 ```
+$ git clone https://github.com/CDSoft/luax && make -C luax install
 $ git clone https://github.com/CDSoft/lsvg
 $ cd lsvg
 $ make install
