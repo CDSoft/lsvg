@@ -101,6 +101,8 @@ $(LSVG_BIN): lsvg.lua svg.lua | $(LUAX)
 # Test
 ###############################################################################
 
+.SECONDARY:
+
 ## Test lsvg
 test: $(BUILD)/demo.ok
 test: $(BUILD)/luax.ok
