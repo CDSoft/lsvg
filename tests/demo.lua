@@ -18,6 +18,10 @@ For further information about lsvg you can visit
 http://cdelord.fr/lsvg
 --]]
 
+local F = require "F"
+local crypt = require "crypt"
+local qmath = require "qmath"
+
 -- The global variable `img` is an SVG object used by lsvg to produce the images
 img {
     -- img can be called to add more attributes
