@@ -160,7 +160,7 @@ function node_mt:__call(x)
     elseif type(x) == "table" and getmetatable(x) == axis_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" then
-        F(x):mapk(function(k, v)
+        F(x):foreachk(function(k, v)
             if type(k) == "string" then
                 self.attrs[k] = v
             elseif type(k) == "number" and math.type(k) == "integer" then
@@ -249,7 +249,7 @@ function node_mt.__index:propagate(t)
         primary = self.attrs.primary,
         secondary = self.attrs.secondary,
     }
-    self.contents:map(function(item)
+    self.contents:foreach(function(item)
         local mt = getmetatable(item)
         if mt.__index.propagate then item:propagate(t2) end
     end)
@@ -351,7 +351,7 @@ function arrow_mt:__call(x)
     elseif type(x) == "table" and getmetatable(x) == node_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" then
-        F(x):mapk(function(k, v)
+        F(x):foreachk(function(k, v)
             if type(k) == "string" then
                 self.attrs[k] = v
             elseif type(k) == "number" and math.type(k) == "integer" then
@@ -391,7 +391,7 @@ local function gen_arrow(arrow)
         g:Line(attrs)(A:xy1())(A_:rot(A, delta):xy2())
         g:Line(attrs)(A:xy1())(A_:rot(A, -delta):xy2())
     end
-    contents:map(function(item)
+    contents:foreach(function(item)
         local anchor = item.attrs.anchor or 0.5
         local M = (1-anchor)*A + anchor*B
         g { item { xy=M } }
@@ -429,7 +429,7 @@ function axis_mt:__call(x)
     elseif type(x) == "table" and getmetatable(x) == node_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" then
-        F(x):mapk(function(k, v)
+        F(x):foreachk(function(k, v)
             if type(k) == "string" then
                 self.attrs[k] = v
             elseif type(k) == "number" and math.type(k) == "integer" then
@@ -496,7 +496,7 @@ local function gen_axis(axis)
         graduations(x0, x1, dx1, 1, attrs.grad, attrs.grad.text)
         graduations(x0, x1, dx2, 0.5, attrs.grad, nil)
     end
-    contents:map(function(item)
+    contents:foreach(function(item)
         local anchor = item.attrs.anchor or 0.5
         local M = (1-anchor)*A + anchor*B
         g { item { xy=M } }
@@ -615,7 +615,7 @@ local svg_mt = {}
 local primitive_nodes = "g text rect circle ellipse line polygon polyline path"
 local custom_nodes = F{ raw=Raw, arrow=Arrow, axis=Axis, }
 
-primitive_nodes:words():map(function(name)
+primitive_nodes:words():foreach(function(name)
     svg[name:cap()] = function(t) return Node(name)(t) end
     node_mt.__index[name:cap()] = function(self, t)
         local node = Node(name)(t)
@@ -624,7 +624,7 @@ primitive_nodes:words():map(function(name)
     end
 end)
 
-custom_nodes:mapk(function(name, func)
+custom_nodes:foreachk(function(name, func)
     svg[name:cap()] = function(...) return func(...) end
     node_mt.__index[name:cap()] = function(self, ...)
         local node = func(...)
@@ -635,7 +635,7 @@ end)
 
 function svg.open()
     _ENV.svg = svg
-    F.mapk(function(k, v) _ENV[k] = v end, svg)
+    F.foreachk(svg, function(k, v) _ENV[k] = v end)
     return svg
 end
 

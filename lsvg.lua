@@ -69,11 +69,11 @@ if #inputs == 0 then
     os.exit(0)
 end
 
-inputs:map(function(name)
+inputs:foreach(function(name)
     assert(loadfile(name))()
 end)
 
-outputs:map(function(name)
+outputs:foreach(function(name)
     if not _ENV.img:save(name) then
         io.stderr:write(arg[0], ": can not save ", name, "\n")
         os.exit(1)
