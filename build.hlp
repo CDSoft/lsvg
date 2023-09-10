@@ -1,9 +1,0 @@
-lsvg: Lua scriptable SVG generator
-
-Targets:
-  help      show this help message
-  compile   Compile lsvg
-  test      Test lsvg
-  all       Compile and test lsvg
-  install   install lsvg in $PREFIX or $HOME/.local
-  clean     clean generated files

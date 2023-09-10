@@ -86,8 +86,8 @@ build clean: phony clean-_builddir
 # Help
 ######################################################################
 
-rule help
-  description = $in
-  command = cat $in
+rule help-29f449bd3494404a
+  description = help
+  command = echo "lsvg: Lua scriptable SVG generator"; echo ""; echo "Targets:"; echo "  help      show this help message"; echo "  compile   Compile lsvg"; echo "  test      Test lsvg"; echo "  all       Compile and test lsvg"; echo "  install   install lsvg in $PREFIX or $HOME/.local"; echo "  clean     clean generated files";
 
-build help: help build.hlp
+build help: help-29f449bd3494404a
