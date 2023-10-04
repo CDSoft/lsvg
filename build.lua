@@ -23,8 +23,6 @@ help.description [[
 $name: Lua scriptable SVG generator
 ]]
 
-local fs = require "fs"
-
 var "builddir" ".build"
 clean "$builddir"
 
@@ -32,41 +30,33 @@ clean "$builddir"
 section "Compilation"
 ---------------------------------------------------------------------
 
-build "$builddir/lsvg" { ls "src/*.lua",
+local lsvg = build "$builddir/lsvg" { ls "src/*.lua",
     command = "luax -q -o $out $in",
 }
 
----------------------------------------------------------------------
-section "Installation"
----------------------------------------------------------------------
-
-install "bin" "$builddir/lsvg"
+install "bin" { lsvg }
 
 ---------------------------------------------------------------------
 section "Test"
 ---------------------------------------------------------------------
 
 rule "lsvg" {
-    command = "$builddir/lsvg $in $out -- lsvg demo",
-    implicit_in = {
-        "$builddir/lsvg",
-    }
+    command = { lsvg, "$in $out -- lsvg demo" },
+    implicit_in = lsvg,
 }
 
 rule "diff" {
     command = "diff -b --color $in && touch $out",
 }
 
-local tests = {}
-
-ls "tests/*.lua"
-: foreach(function(input)
-    local output_svg = fs.join("$builddir", fs.splitext(fs.basename(input))..".svg")
-    build(output_svg) { "lsvg", input }
-    local ref = fs.splitext(input)..".svg"
-    local output_ok = fs.splitext(output_svg)..".ok"
-    acc(tests)(build(output_ok) { "diff", ref, output_svg })
-end)
+local tests = ls "tests/*.lua"
+    : map(function(input)
+        local output_svg = "$builddir" / input:basename():splitext()..".svg"
+        build(output_svg) { "lsvg", input }
+        local ref = input:splitext()..".svg"
+        local output_ok = output_svg:splitext()..".ok"
+        return build(output_ok) { "diff", ref, output_svg }
+    end)
 
 ---------------------------------------------------------------------
 section "Shortcuts"
@@ -80,3 +70,5 @@ phony "test" (tests)
 
 help "all" "Compile and test $name"
 phony "all" { "compile", "test" }
+
+default "all"

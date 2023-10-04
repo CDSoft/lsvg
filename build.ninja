@@ -26,14 +26,10 @@ builddir = .build
 # Compilation
 ######################################################################
 
-rule _builddir_lsvg-1505f65fbf0de04d
+rule _builddir_lsvg
   command = luax -q -o $out $in
 
-build $builddir/lsvg: _builddir_lsvg-1505f65fbf0de04d src/lsvg.lua src/svg.lua
-
-######################################################################
-# Installation
-######################################################################
+build $builddir/lsvg: _builddir_lsvg src/lsvg.lua src/svg.lua
 
 ######################################################################
 # Test
@@ -58,36 +54,38 @@ build compile: phony $builddir/lsvg
 build test: phony $builddir/demo.ok $builddir/luax.ok
 build all: phony compile test
 
+default all
+
 ######################################################################
 # Installation
 ######################################################################
 
-prefix = $$HOME/.local
+prefix = ~/.local
 
-rule install-bin-5a638cd4711dee47
+rule install-bin
   description = INSTALL $in to bin
   command = install -v -D -t $${PREFIX:-$prefix}/bin $in
 
-build install-bin: install-bin-5a638cd4711dee47 $builddir/lsvg
+build install-bin: install-bin $builddir/lsvg
 build install: phony install-bin
 
 ######################################################################
 # Clean
 ######################################################################
 
-rule clean-_builddir-e7c9fd42467ee7fb
+rule clean-_builddir
   description = CLEAN $builddir
   command = rm -rf $builddir/*
 
-build clean-_builddir: clean-_builddir-e7c9fd42467ee7fb
+build clean-_builddir: clean-_builddir
 build clean: phony clean-_builddir
 
 ######################################################################
 # Help
 ######################################################################
 
-rule help-29f449bd3494404a
+rule help
   description = help
-  command = echo "lsvg: Lua scriptable SVG generator"; echo ""; echo "Targets:"; echo "  help      show this help message"; echo "  compile   Compile lsvg"; echo "  test      Test lsvg"; echo "  all       Compile and test lsvg"; echo "  install   install lsvg in $PREFIX or $HOME/.local"; echo "  clean     clean generated files";
+  command = echo "lsvg: Lua scriptable SVG generator"; echo ""; echo "Targets:"; echo "  help      show this help message"; echo "  compile   Compile lsvg"; echo "  test      Test lsvg"; echo "  all       Compile and test lsvg"; echo "  install   install lsvg in PREFIX or ~/.local"; echo "  clean     clean generated files";
 
-build help: help-29f449bd3494404a
+build help: help
