@@ -52,10 +52,11 @@ rule "diff" {
 local tests = ls "tests/*.lua"
     : map(function(input)
         local output_svg = "$builddir" / input:basename():splitext()..".svg"
-        build(output_svg) { "lsvg", input }
         local ref = input:splitext()..".svg"
         local output_ok = output_svg:splitext()..".ok"
-        return build(output_ok) { "diff", ref, output_svg }
+        return build(output_svg) { "lsvg", input,
+            validations = build(output_ok) { "diff", ref, output_svg },
+        }
     end)
 
 ---------------------------------------------------------------------

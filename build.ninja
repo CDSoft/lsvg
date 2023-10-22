@@ -41,17 +41,17 @@ rule lsvg
 rule diff
   command = diff -b --color $in && touch $out
 
-build $builddir/demo.svg: lsvg tests/demo.lua | $builddir/lsvg
 build $builddir/demo.ok: diff tests/demo.svg $builddir/demo.svg
-build $builddir/luax.svg: lsvg tests/luax.lua | $builddir/lsvg
+build $builddir/demo.svg: lsvg tests/demo.lua | $builddir/lsvg |@ $builddir/demo.ok
 build $builddir/luax.ok: diff tests/luax.svg $builddir/luax.svg
+build $builddir/luax.svg: lsvg tests/luax.lua | $builddir/lsvg |@ $builddir/luax.ok
 
 ######################################################################
 # Shortcuts
 ######################################################################
 
 build compile: phony $builddir/lsvg
-build test: phony $builddir/demo.ok $builddir/luax.ok
+build test: phony $builddir/demo.svg $builddir/luax.svg
 build all: phony compile test
 
 default all
@@ -89,3 +89,13 @@ rule help
   command = echo "lsvg: Lua scriptable SVG generator"; echo ""; echo "Targets:"; echo "  help      show this help message"; echo "  compile   Compile lsvg"; echo "  test      Test lsvg"; echo "  all       Compile and test lsvg"; echo "  install   install lsvg in PREFIX or ~/.local"; echo "  clean     clean generated files";
 
 build help: help
+
+######################################################################
+# Regenerate build.ninja when build.lua changes
+######################################################################
+
+rule bang
+  command = bang $quiet $in -o $out -- $args
+  generator = true
+
+build build.ninja: bang build.lua
