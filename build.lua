@@ -30,9 +30,12 @@ clean "$builddir"
 section "Compilation"
 ---------------------------------------------------------------------
 
-local lsvg = build "$builddir/lsvg" { ls "src/*.lua",
+rule "luax" {
+    description = "LUAX $out",
     command = "luax -q -o $out $in",
 }
+
+local lsvg = build "$builddir/lsvg" { "luax", ls "src/*.lua" }
 
 install "bin" { lsvg }
 
@@ -41,11 +44,13 @@ section "Test"
 ---------------------------------------------------------------------
 
 rule "lsvg" {
+    description = "LSVG $in",
     command = { lsvg, "$in $out -- lsvg demo" },
     implicit_in = lsvg,
 }
 
 rule "diff" {
+    description = "DIFF $in",
     command = "diff -b --color $in && touch $out",
 }
 
