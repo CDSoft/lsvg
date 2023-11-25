@@ -23,6 +23,17 @@ $ make install
 
 If LuaX is not installed yet, the first compilation may take a while...
 
+## Precompiled LuaX binaries
+
+In case precompiled binaries are needed (GNU/Linux, MacOS, Windows), some can
+be found at [cdelord.fr/hey](http://cdelord.fr/hey). These archives contain
+lsvg as well as some other softwares more or less related to LuaX.
+
+**Warning**: There are Linux binaries linked with musl and glibc. The musl
+binaries are platform independent but can not load shared libraries. The glibc
+binaries can load shared libraries but may depend on some specific glibc
+versions on the host.
+
 ## Usage
 
 ### Help
