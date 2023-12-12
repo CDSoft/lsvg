@@ -160,7 +160,7 @@ function node_mt:__call(x)
     elseif type(x) == "table" and getmetatable(x) == axis_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" then
-        F(x):foreachk(function(k, v)
+        F.foreachk(x, function(k, v)
             if type(k) == "string" then
                 self.attrs[k] = v
             elseif type(k) == "number" and math.type(k) == "integer" then
@@ -201,7 +201,7 @@ local function fmt_points(ps)
     if type(ps) == "string" then
         ps = ps:words():map(function(p) return p:split ",":map(tonumber) end)
     end
-    return quote(ps:map(function(p) return F.map(fmt_num_raw, p):str "," end):unwords())
+    return quote(F.map(function(p) return F.map(fmt_num_raw, p):str "," end, ps):unwords())
 end
 
 -- default format
@@ -255,7 +255,7 @@ function node_mt.__index:propagate(t)
     end)
 end
 
-local attributes_to_remove = ("arrowhead anchor double grad fmt dpi"):words():from_set(F.const(true))
+local attributes_to_remove = F"arrowhead anchor double grad fmt dpi":words():from_set(F.const(true))
 local function is_svg_attribute(kv) return not attributes_to_remove[kv[1]] end
 
 -- __tostring produces an SVG description of a node and its children.
@@ -351,7 +351,7 @@ function arrow_mt:__call(x)
     elseif type(x) == "table" and getmetatable(x) == node_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" then
-        F(x):foreachk(function(k, v)
+        F.foreachk(x, function(k, v)
             if type(k) == "string" then
                 self.attrs[k] = v
             elseif type(k) == "number" and math.type(k) == "integer" then
@@ -391,7 +391,7 @@ local function gen_arrow(arrow)
         g:Line(attrs)(A:xy1())(A_:rot(A, delta):xy2())
         g:Line(attrs)(A:xy1())(A_:rot(A, -delta):xy2())
     end
-    contents:foreach(function(item)
+    F.foreach(contents, function(item)
         local anchor = item.attrs.anchor or 0.5
         local M = (1-anchor)*A + anchor*B
         g { item { xy=M } }
@@ -429,7 +429,7 @@ function axis_mt:__call(x)
     elseif type(x) == "table" and getmetatable(x) == node_mt then
         self.contents[#self.contents+1] = x
     elseif type(x) == "table" then
-        F(x):foreachk(function(k, v)
+        F.foreachk(x, function(k, v)
             if type(k) == "string" then
                 self.attrs[k] = v
             elseif type(k) == "number" and math.type(k) == "integer" then
@@ -496,7 +496,7 @@ local function gen_axis(axis)
         graduations(x0, x1, dx1, 1, attrs.grad, attrs.grad.text)
         graduations(x0, x1, dx2, 0.5, attrs.grad, nil)
     end
-    contents:foreach(function(item)
+    F.foreach(contents, function(item)
         local anchor = item.attrs.anchor or 0.5
         local M = (1-anchor)*A + anchor*B
         g { item { xy=M } }
@@ -555,7 +555,7 @@ local function Frame(t)
         if type(ps) == "string" then
             ps = ps:words():map(function(p) return p:split ",":map(tonumber) end)
         end
-        return ps:map(txy)
+        return F.map(txy, ps)
     end
 
     local m = {
