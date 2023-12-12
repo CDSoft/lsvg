@@ -44,6 +44,15 @@ local function parse_args()
         : argname "output"
         : target "output"
 
+    parser : option "--MF"
+        : description "Set the dependency file name (implies `--MD`)"
+        : target "depfile"
+        : argname "name"
+
+    parser : flag "--MD"
+        : description "Generate a dependency file"
+        : target "gendep"
+
     parser : argument "input"
         : description "Lua script using the svg module to build an SVG image"
         : args "+"
@@ -68,9 +77,24 @@ F.foreach(args.input, function(name)
 end)
 
 if args.output then
-    local name = args.output
-    if not _ENV.img:save(name) then
-        io.stderr:write(arg[0], ": can not save ", name, "\n")
+    if not _ENV.img:save(args.output) then
+        io.stderr:write(arg[0], ": can not save ", args.output, "\n")
         os.exit(1)
     end
+
+    if args.gendep or args.depfile then
+        local depfile = args.depfile or fs.splitext(args.output)..".d"
+        local function mklist(...)
+            return F.flatten{...}:from_set(F.const(true)):keys()
+                :map(function(p) return p:gsub("^%."..fs.sep, "") end)
+                :sort()
+                :unwords()
+        end
+        local scripts = F.values(package.modpath)
+        local deps = mklist(args.output).." : "..mklist(args.input, scripts)
+        fs.mkdirs(depfile:dirname())
+        fs.write(depfile, deps.."\n")
+    end
+
 end
+

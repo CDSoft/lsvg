@@ -22,6 +22,8 @@ local F = require "F"
 local crypt = require "crypt"
 local qmath = require "qmath"
 
+require "lib/demo-lib" -- to test the dependency file generation
+
 -- The global variable `img` is an SVG object used by lsvg to produce the images
 img {
     -- img can be called to add more attributes

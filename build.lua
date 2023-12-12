@@ -51,7 +51,11 @@ section "Test"
 
 rule "lsvg" {
     description = "LSVG $in",
-    command = { lsvg, "$in -o $out -- lsvg demo" },
+    command = {
+        "LUA_PATH=tests/?.lua",
+        lsvg, "$in -o $out --MF $depfile -- lsvg demo",
+    },
+    depfile = "$out.d",
     implicit_in = lsvg,
 }
 
@@ -65,8 +69,14 @@ local tests = ls "tests/*.lua"
         local output_svg = "$builddir" / input:basename():splitext()..".svg"
         local ref = input:splitext()..".svg"
         local output_ok = output_svg:splitext()..".ok"
+        local output_svg_d = output_svg..".d"
+        local ref_d = ref..".d"
+        local output_deps_ok = output_svg:splitext()..".d.ok"
         return build(output_svg) { "lsvg", input,
-            validations = build(output_ok) { "diff", ref, output_svg },
+            validations = {
+                build(output_ok)      { "diff", ref, output_svg },
+                build(output_deps_ok) { "diff", ref_d, output_svg_d },
+            },
         }
     end)
 

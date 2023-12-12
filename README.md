@@ -47,8 +47,10 @@ Arguments:
 
 Options:
    -h, --help            Show this help message and exit.
-   -v                    Print Bang version ("")
+   -v                    Print Bang version
    -o output             Output file name (SVG, PNG or PDF)
+   --MF name             Set the dependency file name (implies `--MD`)
+   --MD                  Generate a dependency file
 
 For more information, see https://github.com/CDSoft/lsvg
 ```

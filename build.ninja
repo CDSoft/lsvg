@@ -46,16 +46,19 @@ build $builddir/lsvg: luax src/lsvg.lua src/svg.lua $builddir/version
 
 rule lsvg
   description = LSVG $in
-  command = $builddir/lsvg $in -o $out -- lsvg demo
+  command = LUA_PATH=tests/?.lua $builddir/lsvg $in -o $out --MF $depfile -- lsvg demo
+  depfile = $out.d
 
 rule diff
   description = DIFF $in
   command = diff -b --color $in && touch $out
 
 build $builddir/demo.ok: diff tests/demo.svg $builddir/demo.svg
-build $builddir/demo.svg: lsvg tests/demo.lua | $builddir/lsvg |@ $builddir/demo.ok
+build $builddir/demo.d.ok: diff tests/demo.svg.d $builddir/demo.svg.d
+build $builddir/demo.svg: lsvg tests/demo.lua | $builddir/lsvg |@ $builddir/demo.ok $builddir/demo.d.ok
 build $builddir/luax.ok: diff tests/luax.svg $builddir/luax.svg
-build $builddir/luax.svg: lsvg tests/luax.lua | $builddir/lsvg |@ $builddir/luax.ok
+build $builddir/luax.d.ok: diff tests/luax.svg.d $builddir/luax.svg.d
+build $builddir/luax.svg: lsvg tests/luax.lua | $builddir/lsvg |@ $builddir/luax.ok $builddir/luax.d.ok
 
 ######################################################################
 # Shortcuts
