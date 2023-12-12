@@ -20,62 +20,57 @@ For further information about lsvg you can visit
 http://cdelord.fr/lsvg
 --]]
 
-local usage = [[
-lsvg <Lua scripts> <output files> [-- <other args>]
-
-<Lua scripts>
-    Lua script using the svg module
-    to build an SVG image in a global variable (img)
-
-<output files>
-    Output file names where the image is saved
-    (SVG, PNG or PDF)
-
-<other args>
-    Arguments given to the input Lua scripts
-    through the arg global variable
-
-For further information, please visit http://cdelord.fr/lsvg
-]]
-
 local F = require "F"
 local fs = require "fs"
+
+local version = require "version"
+
+local function parse_args()
+    local parser = require "argparse"()
+        : name "lsvg"
+        : description(F.unlines {
+            "SVG generator scriptable in LuaX",
+            "",
+            "Arguments after \"--\" are given to the input scripts",
+        } : rtrim())
+        : epilog "For more information, see https://github.com/CDSoft/lsvg"
+
+    parser : flag "-v"
+        : description(('Print Bang version ("%s")'):format(version))
+        : action(function() print(version); os.exit() end)
+
+    parser : option "-o"
+        : description "Output file name (SVG, PNG or PDF)"
+        : argname "output"
+        : target "output"
+
+    parser : argument "input"
+        : description "Lua script using the svg module to build an SVG image"
+        : args "+"
+
+    local lsvg_arg, script_arg = F.break_(F.partial(F.op.eq, "--"), arg)
+    local args = parser:parse(lsvg_arg)
+    _G.arg = script_arg:drop(1)
+
+    return args
+end
+
+local args = parse_args()
+
 local svg = require "svg".open()
 
 -- The Lua script shall use the global variable `img` to describe the SVG image
 _ENV.img = svg()
 
-local inputs = F{}
-local outputs = F{}
-
-for i = 1, #arg do
-    local _, ext = fs.splitext(arg[i])
-    if ext == ".lua" then
-        inputs[#inputs+1] = arg[i]
-    elseif ext == ".svg" or ext == ".png" or ext == ".pdf" then
-        outputs[#outputs+1] = arg[i]
-    elseif arg[i] == "--" then
-        arg = F.drop(i, arg)
-        break
-    else
-        io.stderr:write("Invalid argument: ", arg[i], "\n")
-        io.stderr:write(usage)
-        os.exit(1)
-    end
-end
-
-if #inputs == 0 then
-    print(usage)
-    os.exit(0)
-end
-
-inputs:foreach(function(name)
+F.foreach(args.input, function(name)
+    _G.arg[0] = name
     assert(loadfile(name))()
 end)
 
-outputs:foreach(function(name)
+if args.output then
+    local name = args.output
     if not _ENV.img:save(name) then
         io.stderr:write(arg[0], ": can not save ", name, "\n")
         os.exit(1)
     end
-end)
+end

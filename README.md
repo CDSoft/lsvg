@@ -15,10 +15,10 @@ library to generate SVG images. It optionally requires
 `lsvg` uses [LuaX](https://github.com/CDSoft/luax).
 
 ```
-$ git clone https://github.com/CDSoft/luax && make -C luax install
+$ git clone https://github.com/CDSoft/luax && ninja -C luax install
 $ git clone https://github.com/CDSoft/lsvg
 $ cd lsvg
-$ make install
+$ ninja install
 ```
 
 If LuaX is not installed yet, the first compilation may take a while...
@@ -29,37 +29,34 @@ In case precompiled binaries are needed (GNU/Linux, MacOS, Windows), some can
 be found at [cdelord.fr/hey](http://cdelord.fr/hey). These archives contain
 lsvg as well as some other softwares more or less related to LuaX.
 
-**Warning**: There are Linux binaries linked with musl and glibc. The musl
-binaries are platform independent but can not load shared libraries. The glibc
-binaries can load shared libraries but may depend on some specific glibc
-versions on the host.
-
 ## Usage
 
 ### Help
 
 ```
-$ lsvg
+$ lsvg -h
 
-lsvg <Lua scripts> <output files> [-- <other args>]
+Usage: lsvg [-h] [-v] [-o output] <input> [<input>] ...
 
-<Lua scripts>
-    Lua script using the svg module
-    to build an SVG image in a global variable (img)
+SVG generator scriptable in LuaX
 
-<output files>
-    Output file names where the image is saved
-    (SVG, PNG or PDF)
+Arguments after "--" are given to the input scripts
 
-<other args>
-    Arguments given the to input Lua scripts
-    through the arg global variable
+Arguments:
+   input                 Lua script using the svg module to build an SVG image
+
+Options:
+   -h, --help            Show this help message and exit.
+   -v                    Print Bang version ("")
+   -o output             Output file name (SVG, PNG or PDF)
+
+For more information, see https://github.com/CDSoft/lsvg
 ```
 
 ### Example
 
 ```
-$ lsvg demo.lua demo.svg -- lsvg demo
+$ lsvg demo.lua -o demo.svg -- lsvg demo
 ```
 
 This command stores `{"lsvg", "demo"}` in `arg`, executes

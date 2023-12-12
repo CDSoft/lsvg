@@ -28,11 +28,17 @@ builddir = .build
 # Compilation
 ######################################################################
 
+rule _builddir_version
+  description = GIT version
+  command = echo -n `git describe --tags` > $out
+
+build $builddir/version: _builddir_version | .git/refs/tags .git/index
+
 rule luax
   description = LUAX $out
   command = luax -q -o $out $in
 
-build $builddir/lsvg: luax src/lsvg.lua src/svg.lua
+build $builddir/lsvg: luax src/lsvg.lua src/svg.lua $builddir/version
 
 ######################################################################
 # Test
@@ -40,7 +46,7 @@ build $builddir/lsvg: luax src/lsvg.lua src/svg.lua
 
 rule lsvg
   description = LSVG $in
-  command = $builddir/lsvg $in $out -- lsvg demo
+  command = $builddir/lsvg $in -o $out -- lsvg demo
 
 rule diff
   description = DIFF $in

@@ -30,12 +30,18 @@ clean "$builddir"
 section "Compilation"
 ---------------------------------------------------------------------
 
+local version = build "$builddir/version" {
+    description = "GIT version",
+    command = "echo -n `git describe --tags` > $out",
+    implicit_in = ".git/refs/tags .git/index",
+}
+
 rule "luax" {
     description = "LUAX $out",
     command = "luax -q -o $out $in",
 }
 
-local lsvg = build "$builddir/lsvg" { "luax", ls "src/*.lua" }
+local lsvg = build "$builddir/lsvg" { "luax", ls "src/*.lua", version }
 
 install "bin" { lsvg }
 
@@ -45,7 +51,7 @@ section "Test"
 
 rule "lsvg" {
     description = "LSVG $in",
-    command = { lsvg, "$in $out -- lsvg demo" },
+    command = { lsvg, "$in -o $out -- lsvg demo" },
     implicit_in = lsvg,
 }
 
