@@ -18,6 +18,8 @@ For further information about lsvg you can visit
 http://cdelord.fr/lsvg
 ]]
 
+local F = require "F"
+
 help.name "lsvg"
 help.description [[
 $name: Lua scriptable SVG generator
@@ -30,6 +32,8 @@ clean "$builddir"
 section "Compilation"
 ---------------------------------------------------------------------
 
+local sources = ls "src/*.lua"
+
 local version = build "$builddir/version" {
     description = "GIT version",
     command = "echo -n `git describe --tags` > $out",
@@ -38,12 +42,15 @@ local version = build "$builddir/version" {
 
 rule "luax" {
     description = "LUAX $out",
-    command = "luax -q -o $out $in",
+    command = "luax $arg -q -o $out $in",
 }
 
-local lsvg = build "$builddir/lsvg" { "luax", ls "src/*.lua", version }
+local binaries = {
+    build "$builddir/lsvg"     { "luax", sources, version },
+    build "$builddir/lsvg.lua" { "luax", sources, version, arg="-t lua" },
+}
 
-install "bin" { lsvg }
+install "bin" { binaries }
 
 ---------------------------------------------------------------------
 section "Test"
@@ -53,10 +60,9 @@ rule "lsvg" {
     description = "LSVG $in",
     command = {
         "LUA_PATH=tests/?.lua",
-        lsvg, "$in -o $out --MF $depfile -- lsvg demo",
+        "$lsvg $in -o $out --MF $depfile -- lsvg demo",
     },
     depfile = "$out.d",
-    implicit_in = lsvg,
 }
 
 rule "diff" {
@@ -64,20 +70,32 @@ rule "diff" {
     command = "diff -b --color $in && touch $out",
 }
 
+local test_envs = F{
+    { "$builddir/lsvg",     "$builddir/test/luax" },
+    { "$builddir/lsvg.lua", "$builddir/test/lua" },
+}
+
 local tests = ls "tests/*.lua"
     : map(function(input)
-        local output_svg = "$builddir" / input:basename():splitext()..".svg"
-        local ref = input:splitext()..".svg"
-        local output_ok = output_svg:splitext()..".ok"
-        local output_svg_d = output_svg..".d"
-        local ref_d = ref..".d"
-        local output_deps_ok = output_svg:splitext()..".d.ok"
-        return build(output_svg) { "lsvg", input,
-            validations = {
-                build(output_ok)      { "diff", ref, output_svg },
-                build(output_deps_ok) { "diff", ref_d, output_svg_d },
-            },
-        }
+        return test_envs : map(function(test_env)
+            local lsvg, test_dir = F.unpack(test_env)
+            local test_type = test_dir:basename()
+
+            local output_svg = test_dir / input:basename():splitext()..".svg"
+            local ref = input:splitext()..".svg"
+            local output_ok = output_svg:splitext()..".ok"
+            local output_svg_d = output_svg..".d"
+            local ref_d = ref.."."..test_type..".d"
+            local output_deps_ok = output_svg:splitext()..".d.ok"
+            return build(output_svg) { "lsvg", input,
+                lsvg = lsvg,
+                implicit_in = lsvg,
+                validations = {
+                    build(output_ok)      { "diff", ref, output_svg },
+                    build(output_deps_ok) { "diff", ref_d, output_svg_d },
+                },
+            }
+        end)
     end)
 
 ---------------------------------------------------------------------
@@ -85,7 +103,7 @@ section "Shortcuts"
 ---------------------------------------------------------------------
 
 help "compile" "Compile $name"
-phony "compile" { "$builddir/lsvg" }
+phony "compile" { binaries }
 
 help "test" "Test $name"
 phony "test" (tests)

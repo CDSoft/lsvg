@@ -36,9 +36,11 @@ build $builddir/version: _builddir_version | .git/refs/tags .git/index
 
 rule luax
   description = LUAX $out
-  command = luax -q -o $out $in
+  command = luax $arg -q -o $out $in
 
 build $builddir/lsvg: luax src/lsvg.lua src/svg.lua $builddir/version
+build $builddir/lsvg.lua: luax src/lsvg.lua src/svg.lua $builddir/version
+  arg = -t lua
 
 ######################################################################
 # Test
@@ -46,26 +48,36 @@ build $builddir/lsvg: luax src/lsvg.lua src/svg.lua $builddir/version
 
 rule lsvg
   description = LSVG $in
-  command = LUA_PATH=tests/?.lua $builddir/lsvg $in -o $out --MF $depfile -- lsvg demo
+  command = LUA_PATH=tests/?.lua $lsvg $in -o $out --MF $depfile -- lsvg demo
   depfile = $out.d
 
 rule diff
   description = DIFF $in
   command = diff -b --color $in && touch $out
 
-build $builddir/demo.ok: diff tests/demo.svg $builddir/demo.svg
-build $builddir/demo.d.ok: diff tests/demo.svg.d $builddir/demo.svg.d
-build $builddir/demo.svg: lsvg tests/demo.lua | $builddir/lsvg |@ $builddir/demo.ok $builddir/demo.d.ok
-build $builddir/luax.ok: diff tests/luax.svg $builddir/luax.svg
-build $builddir/luax.d.ok: diff tests/luax.svg.d $builddir/luax.svg.d
-build $builddir/luax.svg: lsvg tests/luax.lua | $builddir/lsvg |@ $builddir/luax.ok $builddir/luax.d.ok
+build $builddir/test/luax/demo.ok: diff tests/demo.svg $builddir/test/luax/demo.svg
+build $builddir/test/luax/demo.d.ok: diff tests/demo.svg.luax.d $builddir/test/luax/demo.svg.d
+build $builddir/test/luax/demo.svg: lsvg tests/demo.lua | $builddir/lsvg |@ $builddir/test/luax/demo.ok $builddir/test/luax/demo.d.ok
+  lsvg = $builddir/lsvg
+build $builddir/test/lua/demo.ok: diff tests/demo.svg $builddir/test/lua/demo.svg
+build $builddir/test/lua/demo.d.ok: diff tests/demo.svg.lua.d $builddir/test/lua/demo.svg.d
+build $builddir/test/lua/demo.svg: lsvg tests/demo.lua | $builddir/lsvg.lua |@ $builddir/test/lua/demo.ok $builddir/test/lua/demo.d.ok
+  lsvg = $builddir/lsvg.lua
+build $builddir/test/luax/luax.ok: diff tests/luax.svg $builddir/test/luax/luax.svg
+build $builddir/test/luax/luax.d.ok: diff tests/luax.svg.luax.d $builddir/test/luax/luax.svg.d
+build $builddir/test/luax/luax.svg: lsvg tests/luax.lua | $builddir/lsvg |@ $builddir/test/luax/luax.ok $builddir/test/luax/luax.d.ok
+  lsvg = $builddir/lsvg
+build $builddir/test/lua/luax.ok: diff tests/luax.svg $builddir/test/lua/luax.svg
+build $builddir/test/lua/luax.d.ok: diff tests/luax.svg.lua.d $builddir/test/lua/luax.svg.d
+build $builddir/test/lua/luax.svg: lsvg tests/luax.lua | $builddir/lsvg.lua |@ $builddir/test/lua/luax.ok $builddir/test/lua/luax.d.ok
+  lsvg = $builddir/lsvg.lua
 
 ######################################################################
 # Shortcuts
 ######################################################################
 
-build compile: phony $builddir/lsvg
-build test: phony $builddir/demo.svg $builddir/luax.svg
+build compile: phony $builddir/lsvg $builddir/lsvg.lua
+build test: phony $builddir/test/luax/demo.svg $builddir/test/lua/demo.svg $builddir/test/luax/luax.svg $builddir/test/lua/luax.svg
 build all: phony compile test
 
 default all
@@ -80,7 +92,7 @@ rule install-bin
   description = INSTALL $in to bin
   command = install -v -D -t $${PREFIX:-$prefix}/bin $in
 
-build install-bin: install-bin $builddir/lsvg
+build install-bin: install-bin $builddir/lsvg $builddir/lsvg.lua
 build install: phony install-bin
 
 ######################################################################
