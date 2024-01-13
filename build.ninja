@@ -57,19 +57,19 @@ rule diff
 
 build $builddir/test/luax/demo.ok: diff tests/demo.svg $builddir/test/luax/demo.svg
 build $builddir/test/luax/demo.d.ok: diff tests/demo.svg.luax.d $builddir/test/luax/demo.svg.d
-build $builddir/test/luax/demo.svg: lsvg tests/demo.lua | $builddir/lsvg |@ $builddir/test/luax/demo.ok $builddir/test/luax/demo.d.ok
+build $builddir/test/luax/demo.svg | $builddir/test/luax/demo.svg.d: lsvg tests/demo.lua | $builddir/lsvg |@ $builddir/test/luax/demo.ok $builddir/test/luax/demo.d.ok
   lsvg = $builddir/lsvg
 build $builddir/test/lua/demo.ok: diff tests/demo.svg $builddir/test/lua/demo.svg
 build $builddir/test/lua/demo.d.ok: diff tests/demo.svg.lua.d $builddir/test/lua/demo.svg.d
-build $builddir/test/lua/demo.svg: lsvg tests/demo.lua | $builddir/lsvg.lua |@ $builddir/test/lua/demo.ok $builddir/test/lua/demo.d.ok
+build $builddir/test/lua/demo.svg | $builddir/test/lua/demo.svg.d: lsvg tests/demo.lua | $builddir/lsvg.lua |@ $builddir/test/lua/demo.ok $builddir/test/lua/demo.d.ok
   lsvg = $builddir/lsvg.lua
 build $builddir/test/luax/luax.ok: diff tests/luax.svg $builddir/test/luax/luax.svg
 build $builddir/test/luax/luax.d.ok: diff tests/luax.svg.luax.d $builddir/test/luax/luax.svg.d
-build $builddir/test/luax/luax.svg: lsvg tests/luax.lua | $builddir/lsvg |@ $builddir/test/luax/luax.ok $builddir/test/luax/luax.d.ok
+build $builddir/test/luax/luax.svg | $builddir/test/luax/luax.svg.d: lsvg tests/luax.lua | $builddir/lsvg |@ $builddir/test/luax/luax.ok $builddir/test/luax/luax.d.ok
   lsvg = $builddir/lsvg
 build $builddir/test/lua/luax.ok: diff tests/luax.svg $builddir/test/lua/luax.svg
 build $builddir/test/lua/luax.d.ok: diff tests/luax.svg.lua.d $builddir/test/lua/luax.svg.d
-build $builddir/test/lua/luax.svg: lsvg tests/luax.lua | $builddir/lsvg.lua |@ $builddir/test/lua/luax.ok $builddir/test/lua/luax.d.ok
+build $builddir/test/lua/luax.svg | $builddir/test/lua/luax.svg.d: lsvg tests/luax.lua | $builddir/lsvg.lua |@ $builddir/test/lua/luax.ok $builddir/test/lua/luax.d.ok
   lsvg = $builddir/lsvg.lua
 
 ######################################################################

@@ -90,6 +90,7 @@ local tests = ls "tests/*.lua"
             return build(output_svg) { "lsvg", input,
                 lsvg = lsvg,
                 implicit_in = lsvg,
+                implicit_out = output_svg_d,
                 validations = {
                     build(output_ok)      { "diff", ref, output_svg },
                     build(output_deps_ok) { "diff", ref_d, output_svg_d },
