@@ -36,11 +36,11 @@ local function parse_args()
         : epilog "For more information, see https://github.com/CDSoft/lsvg"
 
     parser : flag "-v"
-        : description(('Print Bang version ("%s")'):format(version))
+        : description(('Print version ("%s")'):format(version))
         : action(function() print(version); os.exit() end)
 
     parser : option "-o"
-        : description "Output file name (SVG, PNG or PDF)"
+        : description "Output file name (SVG, PNG, JPEG or PDF)"
         : argname "output"
         : target "output"
 

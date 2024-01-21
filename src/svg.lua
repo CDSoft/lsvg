@@ -280,13 +280,14 @@ end
 -- save writes the image to a file.
 -- The image format is infered from its name:
 -- - file.svg : saved as an SVG text file
--- - file.png or file.pdf : saved as a PNG or PDF file
---   (SVG converted to PNG or PDF with ImageMagick)
+-- - file.png, file.jpg or file.pdf : saved as a PNG, JPEG or PDF file
+--   (SVG converted to PNG, JPEG or PDF with ImageMagick)
 function node_mt.__index:save(filename)
     local base, ext = fs.splitext(filename)
+    ext = ext:lower()
     if ext == ".svg" then
         return fs.write(filename, tostring(self))
-    elseif ext == ".png" or ext == ".pdf" then
+    elseif F.elem(ext, {".png", ".jpg", ".jpeg", ".pdf"}) then
         local dpi = self.attrs.dpi
         return fs.with_tmpdir(function(tmp)
             local tmpname = fs.join(tmp, fs.basename(base)..".svg")
@@ -612,7 +613,7 @@ local svg = {
 }
 local svg_mt = {}
 
-local primitive_nodes = "g text rect circle ellipse line polygon polyline path"
+local primitive_nodes = F"g text rect circle ellipse line polygon polyline path"
 local custom_nodes = F{ raw=Raw, arrow=Arrow, axis=Axis, }
 
 primitive_nodes:words():foreach(function(name)

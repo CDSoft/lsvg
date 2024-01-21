@@ -4,7 +4,7 @@
 
 It is based on [LuaX](https://github.com/CDSoft/luax) and uses a pure Lua
 library to generate SVG images. It optionally requires
-[ImageMagick](https://imagemagick.org/) to make PNG images.
+[ImageMagick](https://imagemagick.org/) to make PNG, JPEG or PDF images.
 
 `lsvg` was initially inspired by [svg-lua](https://github.com/Jericho1060/svg-lua).
 
@@ -47,8 +47,8 @@ Arguments:
 
 Options:
    -h, --help            Show this help message and exit.
-   -v                    Print Bang version
-   -o output             Output file name (SVG, PNG or PDF)
+   -v                    Print version
+   -o output             Output file name (SVG, PNG, JPEG or PDF)
    --MF name             Set the dependency file name (implies `--MD`)
    --MD                  Generate a dependency file
 
