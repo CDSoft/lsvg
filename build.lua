@@ -32,6 +32,18 @@ clean "$builddir"
 section "Compilation"
 ---------------------------------------------------------------------
 
+local targets = F(require "sys".targets):map(F.partial(F.nth, "name"))
+local target, ext = nil, ""
+F(arg) : foreach(function(a)
+    if targets:elem(a) then
+        if target then F.error_without_stack_trace("multiple target definition", 2) end
+        target = a
+        if target:match"windows" then ext = ".exe" end
+    else
+        F.error_without_stack_trace(a..": unknown argument")
+    end
+end)
+
 local sources = ls "src/*.lua"
 
 local version = build "$builddir/version" {
@@ -45,8 +57,18 @@ rule "luax" {
     command = "luax $arg -q -o $out $in",
 }
 
+rule "luaxc" {
+    description = "LUAXC $out",
+    command = "luaxc $arg -o $out $in",
+    pool = pool "luaxc" { depth = 1 },
+}
+
 local binaries = {
-    build "$builddir/lsvg"     { "luax", sources, version },
+    build("$builddir/lsvg"..ext) {
+        target and "luaxc" or "luax",
+        sources, version,
+        arg = target and {"-t", target},
+    },
     build "$builddir/lsvg.lua" { "luax", sources, version, arg="-t lua" },
 }
 
@@ -106,10 +128,12 @@ section "Shortcuts"
 help "compile" "Compile $name"
 phony "compile" { binaries }
 
+if not target then
 help "test" "Test $name"
 phony "test" (tests)
+end
 
 help "all" "Compile and test $name"
-phony "all" { "compile", "test" }
+phony "all" { "compile", target and {} or "test" }
 
 default "all"
