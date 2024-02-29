@@ -120,7 +120,15 @@ build clean: phony clean-_builddir
 
 rule help
   description = help
-  command = echo "lsvg: Lua scriptable SVG generator"; echo ""; echo "Targets:"; echo "  help      show this help message"; echo "  compile   Compile lsvg"; echo "  test      Test lsvg"; echo "  all       Compile and test lsvg"; echo "  install   install lsvg in PREFIX or ~/.local"; echo "  clean     clean generated files";
+  command = echo "lsvg: Lua scriptable SVG generator"; $
+            echo ""; $
+            echo "Targets:"; $
+            echo "  help      show this help message"; $
+            echo "  compile   Compile lsvg"; $
+            echo "  test      Test lsvg"; $
+            echo "  all       Compile and test lsvg"; $
+            echo "  install   install lsvg in PREFIX or ~/.local"; $
+            echo "  clean     clean generated files"
 
 build help: help
 
