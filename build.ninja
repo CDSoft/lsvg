@@ -38,15 +38,11 @@ rule luax
   description = LUAX $out
   command = luax $arg -q -o $out $in
 
-pool luaxc
-  depth = 1
-
 rule luaxc
   description = LUAXC $out
-  command = luaxc $arg -o $out $in
-  pool = luaxc
+  command = luaxc $arg -q -o $out $in
 
-build $builddir/lsvg: luax src/lsvg.lua src/svg.lua $builddir/version
+build $builddir/lsvg: luaxc src/lsvg.lua src/svg.lua $builddir/version
 build $builddir/lsvg.lua: luax src/lsvg.lua src/svg.lua $builddir/version
   arg = -t lua
 
