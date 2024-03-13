@@ -57,7 +57,7 @@ rule "luaxc" {
 }
 
 local binaries = {
-    build("$builddir/lsvg"..(target or sys.build).exe) {
+    build("$builddir/lsvg"..(target or sys).exe) {
         "luaxc",
         sources, version,
         arg = target and {"-t", target.name},
