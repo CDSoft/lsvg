@@ -255,7 +255,7 @@ function node_mt.__index:propagate(t)
     end)
 end
 
-local attributes_to_remove = F"arrowhead anchor double grad fmt dpi":words():from_set(F.const(true))
+local attributes_to_remove = F"arrowhead anchor double grad fmt dpi transparent":words():from_set(F.const(true))
 local function is_svg_attribute(kv) return not attributes_to_remove[kv[1]] end
 
 -- __tostring produces an SVG description of a node and its children.
@@ -289,6 +289,7 @@ function node_mt.__index:save(filename)
         return fs.write(filename, tostring(self))
     elseif F.elem(ext, {".png", ".jpg", ".jpeg", ".pdf"}) then
         local dpi = self.attrs.dpi
+        local transparent = self.attrs.transparent
         return fs.with_tmpdir(function(tmp)
             local tmpname = fs.join(tmp, fs.basename(base)..".svg")
             local ok, err = fs.write(tmpname, tostring(self))
@@ -297,6 +298,9 @@ function node_mt.__index:save(filename)
                 "convert",
                 dpi and {
                     "-units", "PixelsPerInch", "-density", dpi,
+                } or {},
+                transparent and {
+                    "-transparent", transparent,
                 } or {},
                 tmpname, filename
             }
