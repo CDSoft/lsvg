@@ -46,23 +46,16 @@ local version = build "$builddir/version" {
     implicit_in = ".git/refs/tags .git/index",
 }
 
-rule "luax" {
-    description = "LUAX $out",
-    command = "luax $arg -q -o $out $in",
-}
-
 rule "luaxc" {
     description = "LUAXC $out",
-    command = "luaxc $arg -q -o $out $in",
+    command = "luax compile $arg -q -o $out $in",
 }
 
 local binaries = {
-    build("$builddir/lsvg"..(target or sys).exe) {
-        "luaxc",
-        sources, version,
-        arg = target and {"-t", target.name},
+    build("$builddir/lsvg"..(target or sys).exe) { "luaxc", sources, version,
+        arg = { "-b", "-t", (target or sys).name },
     },
-    build "$builddir/lsvg.lua" { "luax", sources, version, arg="-t lua" },
+    build "$builddir/lsvg.lua" { "luaxc", sources, version, arg="-t lua" },
 }
 
 install "bin" { binaries }

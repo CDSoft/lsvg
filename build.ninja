@@ -34,16 +34,13 @@ rule _builddir_version
 
 build $builddir/version: _builddir_version | .git/refs/tags .git/index
 
-rule luax
-  description = LUAX $out
-  command = luax $arg -q -o $out $in
-
 rule luaxc
   description = LUAXC $out
-  command = luaxc $arg -q -o $out $in
+  command = luax compile $arg -q -o $out $in
 
 build $builddir/lsvg: luaxc src/lsvg.lua src/svg.lua $builddir/version
-build $builddir/lsvg.lua: luax src/lsvg.lua src/svg.lua $builddir/version
+  arg = -b -t linux-x86_64
+build $builddir/lsvg.lua: luaxc src/lsvg.lua src/svg.lua $builddir/version
   arg = -t lua
 
 ######################################################################
