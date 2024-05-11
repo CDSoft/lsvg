@@ -39,7 +39,7 @@ rule luaxc
   command = luax compile $arg -q -o $out $in
 
 build $builddir/lsvg: luaxc src/lsvg.lua src/svg.lua $builddir/version
-  arg = -b -t linux-x86_64
+  arg = -b -t native
 build $builddir/lsvg.lua: luaxc src/lsvg.lua src/svg.lua $builddir/version
   arg = -t lua
 
