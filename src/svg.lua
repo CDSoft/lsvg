@@ -294,15 +294,22 @@ function node_mt.__index:save(filename)
             local tmpname = fs.join(tmp, fs.basename(base)..".svg")
             local ok, err = fs.write(tmpname, tostring(self))
             if not ok then return nil, err end
+            local magick = assert(fs.findpath "magick" or fs.findpath "convert", "ImageMagick not found")
+            local unshare = fs.findpath "unshare"
             return sh.run {
-                "convert",
+                unshare and {
+                    "NO_AT_BRIDGE=1",   -- see https://bbs.archlinux.org/viewtopic.php?id=176663
+                    unshare, "--user",  -- see https://gitlab.com/inkscape/inkscape/-/issues/4716
+                } or {},
+                magick,
                 dpi and {
                     "-units", "PixelsPerInch", "-density", dpi,
                 } or {},
+                tmpname,
                 transparent and {
                     "-transparent", transparent,
                 } or {},
-                tmpname, filename
+                filename,
             }
         end)
     else
