@@ -34,14 +34,23 @@ rule _builddir_version
 
 build $builddir/version: _builddir_version | .git/refs/tags .git/index
 
-rule luaxc
-  description = LUAXC $out
-  command = luax compile $arg -q -o $out $in
+rule luax-native
+  description = luax-native $out
+  command = luax compile -t native $in -o $out -q
 
-build $builddir/lsvg: luaxc src/lsvg.lua src/svg.lua $builddir/version
-  arg = -b -t native
-build $builddir/lsvg.lua: luaxc src/lsvg.lua src/svg.lua $builddir/version
-  arg = -t lua
+build $builddir/lsvg: luax-native src/lsvg.lua src/svg.lua $builddir/version
+
+rule luax-lua
+  description = luax-lua $out
+  command = luax compile -t lua $in -o $out -q
+
+build $builddir/lsvg.lua: luax-lua src/lsvg.lua src/svg.lua $builddir/version
+
+rule luax
+  description = luax $out
+  command = luax compile -t luax $in -o $out -q
+
+build $builddir/lsvg.luax: luax src/lsvg.lua src/svg.lua $builddir/version
 
 ######################################################################
 # Test
@@ -77,7 +86,7 @@ build $builddir/test/lua/luax.svg | $builddir/test/lua/luax.svg.d: lsvg tests/lu
 # Shortcuts
 ######################################################################
 
-build compile: phony $builddir/lsvg $builddir/lsvg.lua
+build compile: phony $builddir/lsvg $builddir/lsvg.lua $builddir/lsvg.luax
 build test: phony $builddir/test/luax/demo.svg $builddir/test/lua/demo.svg $builddir/test/luax/luax.svg $builddir/test/lua/luax.svg
 build all: phony compile test
 

@@ -46,17 +46,15 @@ local version = build "$builddir/version" {
     implicit_in = ".git/refs/tags .git/index",
 }
 
-rule "luaxc" {
-    description = "LUAXC $out",
-    command = "luax compile $arg -q -o $out $in",
+build.luax.add_global "flags" "-q"
+
+-- used by LuaX only
+local binaries = {
+    build.luax[target and target.name or "native"]("$builddir/lsvg"..(target or sys).exe) { sources, version },
+    build.luax.lua "$builddir/lsvg.lua" { sources, version },
 }
 
-local binaries = {
-    build("$builddir/lsvg"..(target or sys).exe) { "luaxc", sources, version,
-        arg = { "-b", "-t", target and target.name or "native" },
-    },
-    build "$builddir/lsvg.lua" { "luaxc", sources, version, arg="-t lua" },
-}
+local lsvg_luax = build.luax.luax "$builddir/lsvg.luax" { sources, version }
 
 install "bin" { binaries }
 
@@ -112,7 +110,7 @@ section "Shortcuts"
 ---------------------------------------------------------------------
 
 help "compile" "Compile $name"
-phony "compile" { binaries }
+phony "compile" { binaries, lsvg_luax }
 
 if not target then
 help "test" "Test $name"
