@@ -26,7 +26,7 @@ If LuaX is not installed yet, the first compilation may take a while...
 ## Precompiled LuaX binaries
 
 In case precompiled binaries are needed (GNU/Linux, MacOS, Windows), some can
-be found at [cdelord.fr/hey](http://cdelord.fr/hey). These archives contain
+be found at [cdelord.fr/pub](http://cdelord.fr/pub). These archives contain
 lsvg as well as some other softwares more or less related to LuaX.
 
 ## Usage
