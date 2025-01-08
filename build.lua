@@ -19,19 +19,13 @@ http://cdelord.fr/lsvg
 ]]
 
 local F = require "F"
-local sys = require "sys"
 
 help.name "lsvg"
 help.description [[
 $name: Lua scriptable SVG generator
 ]]
 
-local target, args = target(arg)
-if #args > 0 then
-    F.error_without_stack_trace(args:unwords()..": unexpected arguments")
-end
-
-var "builddir" (".build"/(target and target.name))
+var "builddir" ".build"
 clean "$builddir"
 
 ---------------------------------------------------------------------
@@ -50,13 +44,18 @@ build.luax.add_global "flags" "-q"
 
 -- used by LuaX only
 local binaries = {
-    build.luax[target and target.name or "native"]("$builddir/lsvg"..(target or sys).exe) { sources, version },
+    build.luax.native "$builddir/lsvg" { sources, version },
     build.luax.lua "$builddir/lsvg.lua" { sources, version },
 }
 
 local lsvg_luax = build.luax.luax "$builddir/lsvg.luax" { sources, version }
 
 install "bin" { binaries }
+
+require "build-release" {
+    name = "lsvg",
+    sources = { sources, version },
+}
 
 ---------------------------------------------------------------------
 section "Test"
@@ -112,12 +111,10 @@ section "Shortcuts"
 help "compile" "Compile $name"
 phony "compile" { binaries, lsvg_luax }
 
-if not target then
 help "test" "Test $name"
 phony "test" (tests)
-end
 
 help "all" "Compile and test $name"
-phony "all" { "compile", target and {} or "test" }
+phony "all" { "compile", "test" }
 
 default "all"
