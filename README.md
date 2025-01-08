@@ -85,4 +85,4 @@ No documentation yet. Just read the source code...
     along with lsvg.  If not, see <https://www.gnu.org/licenses/>.
 
     For further information about lsvg you can visit
-    http://cdelord.fr/lsvg
+    https://github.com/cdsoft/lsvg
