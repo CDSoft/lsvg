@@ -19,6 +19,7 @@ https://github.com/cdsoft/lsvg
 ]]
 
 local F = require "F"
+local sh = require "sh"
 
 help.name "lsvg"
 help.description [[
@@ -32,12 +33,14 @@ clean "$builddir"
 section "Compilation"
 ---------------------------------------------------------------------
 
+var "git_version" { sh "git describe --tags" }
+generator { implicit_in = ".git/refs/tags" }
+
 local sources = ls "src/*.lua"
 
 local version = build "$builddir/version" {
     description = "GIT version",
-    command = "echo -n `git describe --tags` > $out",
-    implicit_in = ".git/refs/tags .git/index",
+    command = "echo $git_version > $out",
 }
 
 build.luax.add_global "flags" "-q"
@@ -52,9 +55,19 @@ local lsvg_luax = build.luax.luax "$builddir/lsvg.luax" { sources, version }
 
 install "bin" { binaries }
 
-require "build-release" {
-    name = "lsvg",
-    sources = { sources, version },
+phony "release" {
+    build.tar "$builddir/release/${git_version}/lsvg-${git_version}-lua.tar.gz" {
+        base = "$builddir/release/.build",
+        name = "lsvg-${git_version}-lua",
+        build.luax.lua("$builddir/release/.build/lsvg-${git_version}-lua/bin/lsvg.lua") { sources },
+    },
+    require "targets" : map(function(target)
+        return build.tar("$builddir/release/${git_version}/lsvg-${git_version}-"..target.name..".tar.gz") {
+            base = "$builddir/release/.build",
+            name = "lsvg-${git_version}-"..target.name,
+            build.luax[target.name]("$builddir/release/.build/lsvg-${git_version}-"..target.name/"bin/lsvg") { sources },
+        }
+    end),
 }
 
 ---------------------------------------------------------------------
