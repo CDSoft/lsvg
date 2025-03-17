@@ -12,12 +12,32 @@ library to generate SVG images. It optionally requires
 
 `lsvg` is available on Github: <https://github.com/CDSoft/lsvg>.
 
-`lsvg` uses [LuaX](https://github.com/CDSoft/luax).
+`lsvg` uses [LuaX](https://github.com/CDSoft/luax) and [Bang](https://github.com/CDSoft/bang).
 
+### LuaX
+
+``` sh
+$ git clone https://github.com/CDSoft/luax
+$ cd luax
+$ ./bootstrap.sh
+$ ninja install
 ```
-$ git clone https://github.com/CDSoft/luax && ninja -C luax install
+
+### Bang
+
+``` sh
+$ git clone https://github.com/CDSoft/bang
+$ cd bang
+$ ./boot.lua
+$ ninja install
+```
+
+### Lsvg
+
+``` sh
 $ git clone https://github.com/CDSoft/lsvg
 $ cd lsvg
+$ bang
 $ ninja install
 ```
 
