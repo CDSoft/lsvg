@@ -36,22 +36,23 @@ section "Compilation"
 var "git_version" { sh "git describe --tags" }
 generator { implicit_in = ".git/refs/tags" }
 
-local sources = ls "src/*.lua"
-
-local version = build "$builddir/version" {
-    description = "GIT version",
-    command = "echo $git_version > $out",
+local sources = {
+    ls "src/*.lua",
+    build "$builddir/version" {
+        description = "GIT version",
+        command = "echo $git_version > $out",
+    },
 }
 
 build.luax.add_global "flags" "-q"
 
 -- used by LuaX only
 local binaries = {
-    build.luax.native "$builddir/lsvg" { sources, version },
-    build.luax.lua "$builddir/lsvg.lua" { sources, version },
+    build.luax.native "$builddir/lsvg" { sources },
+    build.luax.lua "$builddir/lsvg.lua" { sources },
 }
 
-local lsvg_luax = build.luax.luax "$builddir/lsvg.luax" { sources, version }
+local lsvg_luax = build.luax.luax "$builddir/lsvg.luax" { sources }
 
 install "bin" { binaries }
 
