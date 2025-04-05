@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with lsvg.  If not, see <https://www.gnu.org/licenses/>.
 
 For further information about lsvg you can visit
-https://github.com/cdsoft/lsvg
+https://codeberg.org/cdsoft/lsvg
 ]]
 
 local F = require "F"

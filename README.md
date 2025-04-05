@@ -2,7 +2,7 @@
 
 `lsvg` is a Lua interpreter specialized to generate SVG images.
 
-It is based on [LuaX](https://github.com/CDSoft/luax) and uses a pure Lua
+It is based on [LuaX](https://codeberg.org/cdsoft/luax) and uses a pure Lua
 library to generate SVG images. It optionally requires
 [ImageMagick](https://imagemagick.org/) to make PNG, JPEG or PDF images.
 
@@ -10,14 +10,14 @@ library to generate SVG images. It optionally requires
 
 ## Installation
 
-`lsvg` is available on Github: <https://github.com/CDSoft/lsvg>.
+`lsvg` is available on Codeberg: <https://codeberg.org/cdsoft/lsvg>.
 
-`lsvg` uses [LuaX](https://github.com/CDSoft/luax) and [Bang](https://github.com/CDSoft/bang).
+`lsvg` uses [LuaX](https://codeberg.org/cdsoft/luax) and [Bang](https://codeberg.org/cdsoft/bang).
 
 ### LuaX
 
 ``` sh
-$ git clone https://github.com/CDSoft/luax
+$ git clone https://codeberg.org/cdsoft/luax
 $ cd luax
 $ ./bootstrap.sh
 $ ninja install
@@ -26,7 +26,7 @@ $ ninja install
 ### Bang
 
 ``` sh
-$ git clone https://github.com/CDSoft/bang
+$ git clone https://codeberg.org/cdsoft/bang
 $ cd bang
 $ ./boot.lua
 $ ninja install
@@ -35,7 +35,7 @@ $ ninja install
 ### Lsvg
 
 ``` sh
-$ git clone https://github.com/CDSoft/lsvg
+$ git clone https://codeberg.org/cdsoft/lsvg
 $ cd lsvg
 $ bang
 $ ninja install
@@ -66,7 +66,7 @@ Options:
    --MF name             Set the dependency file name (implies `--MD`)
    --MD                  Generate a dependency file
 
-For more information, see https://github.com/CDSoft/lsvg
+For more information, see https://codeberg.org/cdsoft/lsvg
 ```
 
 ### Example
@@ -105,4 +105,4 @@ No documentation yet. Just read the source code...
     along with lsvg.  If not, see <https://www.gnu.org/licenses/>.
 
     For further information about lsvg you can visit
-    https://github.com/cdsoft/lsvg
+    https://codeberg.org/cdsoft/lsvg
