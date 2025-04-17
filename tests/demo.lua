@@ -179,7 +179,7 @@ local tree = G{
 
 -- clouds
 do
-    local prng = crypt.prng(42)
+    local prng = crypt.prng(42, 1)
     for _ = 1, 80 do
         local x = prng:float(-15, 15)
         local y = prng:float(25, 40)
@@ -199,7 +199,7 @@ do
     local ke = 0.75
     local emin = 1
 
-    local prng = crypt.prng(42)
+    local prng = crypt.prng(42, 1)
     local function grow(M0, M1, e)
         if e < emin then return 0 end
 
@@ -227,7 +227,7 @@ end
 
 -- and some grass
 do
-    local prng = crypt.prng(42)
+    local prng = crypt.prng(42, 1)
     local blades = 0
     local flowers = 0
     local theta1, theta2 = 10, 45
