@@ -20,14 +20,13 @@ https://codeberg.org/cdsoft/lsvg
 
 local F = require "F"
 
-version "2.6.8"
+version "2.6.9"
 
 help.name "lsvg"
 help.description [[
 $name: Lua scriptable SVG generator
 ]]
 
-var "builddir" ".build"
 clean "$builddir"
 
 ---------------------------------------------------------------------
@@ -36,10 +35,7 @@ section "Compilation"
 
 local sources = {
     ls "src/*.lua",
-    build "$builddir/version" {
-        description = "GIT version",
-        command = "echo $version > $out",
-    },
+    file "$builddir/version" { vars.version },
 }
 
 build.luax.add_global "flags" "-q"
