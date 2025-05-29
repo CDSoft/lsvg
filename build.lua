@@ -20,7 +20,7 @@ https://codeberg.org/cdsoft/lsvg
 
 local F = require "F"
 
-version "2.6.9"
+version "2.6.10"
 
 help.name "lsvg"
 help.description [[

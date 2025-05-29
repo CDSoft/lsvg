@@ -1,3 +1,5 @@
+<img src="lsvg-banner.svg" style="width:100%" />
+
 # Lua scriptable SVG image generator
 
 `lsvg` is a Lua interpreter specialized to generate SVG images.
