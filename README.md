@@ -10,6 +10,14 @@ library to generate SVG images. It optionally requires
 
 `lsvg` was initially inspired by [svg-lua](https://github.com/Jericho1060/svg-lua).
 
+## Releases
+
+It is strongly recommended to build Lsvg from source,
+as this is the only reliable way to install the exact version you need.
+
+However, if you do require precompiled binaries,
+this page offers a selection for various platforms: <https://cdelord.fr/pub>.
+
 ## Installation
 
 `lsvg` is available on Codeberg: <https://codeberg.org/cdsoft/lsvg>.
