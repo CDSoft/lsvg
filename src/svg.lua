@@ -196,6 +196,17 @@ local function fmt_num(x)
     return quote(fmt_num_raw(x))
 end
 
+-- format a viewbox attribute
+local function fmt_viewbox(vb)
+    if type(vb) == "string" then return vb end
+    return quote(F.unwords(F.map(fmt_num_raw, {
+        vb.x or 0,
+        vb.y or 0,
+        vb.width or vb.w,
+        vb.height or vb.h,
+    })))
+end
+
 -- format a list of points ("x,y x,y ...")
 local function fmt_points(ps)
     if type(ps) == "string" then
@@ -213,6 +224,7 @@ end
 local fmt = {
     font_size = fmt_num,
     height = fmt_num, width = fmt_num,
+    viewBox = fmt_viewbox,
     x = fmt_num, y = fmt_num,
     x1 = fmt_num, y1 = fmt_num,
     x2 = fmt_num, y2 = fmt_num,

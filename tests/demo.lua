@@ -36,6 +36,14 @@ img {
 local w = img.attrs.width // 2
 local h = img.attrs.height // 2
 
+img {
+    viewBox = {
+        width = 2*w,
+        height = 2*h,
+    },
+    --preserveAspectRatio = "xMidYMid meet",
+}
+
 local pi = math.pi
 local sin = math.sin
 local rad = math.rad
