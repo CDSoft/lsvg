@@ -1,5 +1,15 @@
 <img src="lsvg-banner.svg" style="width:100%" />
 
+Disclaimer
+==========
+
+> [!IMPORTANT]
+> **lsvg is now part of [LuaX](https://codeberg.org/cdsoft/luax) (<https://codeberg.org/cdsoft/luax>).**
+>
+> This consolidation simplifies maintenance and updates, and makes deploying LuaX, Bang, ypp, and lsvg more consistent.
+>
+> The legacy lsvg repository is now deprecated and will no longer receive updates.
+
 # Lua scriptable SVG image generator
 
 `lsvg` is a Lua interpreter specialized to generate SVG images.
